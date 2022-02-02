@@ -7,18 +7,6 @@ from nltk import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
-import demoji
-
-demoji.download_codes()
-
-"""
-DIR_NAME = os.path.dirname(__file__)
-MODELS_DIR = os.path.join(DIR_NAME, "../../../data/models")
-stanfordnlp.download('en', MODELS_DIR)
-NLP = stanfordnlp.Pipeline(processors='tokenize,depparse',
-                           models_dir=MODELS_DIR,
-                           treebank='en_ewt', use_gpu=True, pos_batch_size=3000)
-"""
 PORTER_STEMMER = PorterStemmer()
 
 
@@ -36,27 +24,14 @@ class NLPUtils:
         return sentences
 
     @staticmethod
-    def preprocess_sentence(sentence, stemmer, lower=True):
+    def preprocess_sentence(sentence,lower=True):
         sentence = NLPUtils.to_lower(sentence, lower)
-        sentence = NLPUtils.remove_hyperlinks(sentence)
-        sentence = NLPUtils.remove_emoji(sentence)
-        sentence = NLPUtils.punctuation_removal(sentence)
         tokens = NLPUtils.word_tokenization(sentence)
-        tokens = NLPUtils.stopword_elimination(tokens)
-        tokens = NLPUtils.nonascii_removal(tokens)
-        if stemmer == "porter":
-            tokens = [NLPUtils.porter_stem(token) for token in tokens]
-        else:
-            print("No stemming applied")
         return tokens
 
     @staticmethod
     def is_ascii(s):
         return all(ord(c) < 128 for c in s)
-
-    @staticmethod
-    def remove_emoji(sentence):
-        return demoji.replace(sentence, repl="")
 
     @staticmethod
     def has_digit(string):
