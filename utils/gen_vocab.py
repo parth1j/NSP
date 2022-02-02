@@ -27,6 +27,7 @@ for i in range(0,len(FILES)):
     with open(FILES[i], encoding="utf8") as csv_file :
         reader = csv.reader(csv_file)
         next(reader)  # skip header
+        index=0
         for row in reader:
             sentence = row[0]
             sent_tokens = NLPUtils.preprocess_sentence(sentence)
@@ -50,6 +51,8 @@ for i in range(0,len(FILES)):
                 validation_data.append((NLPUtils.to_lower(sentence,True),NLPUtils.to_lower(sql,True)))
             print(index)
             index+=1
+            if(index==2000):
+                break
 
 input_vocab = dict(sorted(input_vocab.items(), key=lambda item: item[1]))
 output_vocab = dict(sorted(output_vocab.items(), key=lambda item: item[1]))
@@ -57,8 +60,8 @@ output_vocab = dict(sorted(output_vocab.items(), key=lambda item: item[1]))
 speech_tags = {}
 
 from nltk import pos_tag
-INPUT_FREQ_THRESHOLD = 1000
-OUTPUT_FREQ_THRESHOLD = 1000
+INPUT_FREQ_THRESHOLD = 100
+OUTPUT_FREQ_THRESHOLD = 100
 
 for key,value in list(input_vocab.items()):
     if input_vocab[key] < INPUT_FREQ_THRESHOLD:
@@ -133,7 +136,8 @@ with open(OUTPUT_VOCAB_FILE,'w',encoding='utf-8') as output_file :
     for key in output_vocab:
         output_file.write(key + " " + str(output_vocab[key]) + "\n")
     output_file.write('<UNK> 100000')
-           
+
+            
 with open(TRAIN_FILE,'w',encoding='utf-8') as train_file :
     for pair in train_data:
         train_file.write(pair[0] + "   " + pair[1] + "\n")
