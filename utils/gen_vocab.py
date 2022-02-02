@@ -96,13 +96,22 @@ for key,value in list(output_vocab.items()):
 
 def transform(sentence,vocab):
     sent_tokens = sentence.split(' ')
-    print(sentence)
     print(sent_tokens)
     for i in range(0,len(sent_tokens)):
         if sent_tokens[i] not in vocab:
             if sent_tokens[i] in speech_tags:
                 sent_tokens[i] = speech_tags[sent_tokens[i]]
-    return ' '.join(sent_tokens)
+            else :
+                sent_tokens[i] = '<UNK>'
+    temp_arr=[]
+    for i in range(0,len(sent_tokens)-1):
+        if sent_tokens[i]==sent_tokens[i+1] :
+            continue
+        else :
+            temp_arr.append(sent_tokens[i])
+    if sent_tokens[len(sent_tokens)-2]!=sent_tokens[len(sent_tokens)-1]:
+        temp_arr.append(sent_tokens[len(sent_tokens)-1])
+    return ' '.join(temp_arr)
     
 
 for i in range(0,len(train_data)):
@@ -118,22 +127,23 @@ for i in range(0,len(validation_data)):
 with open(INPUT_VOCAB_FILE,'w',encoding='utf-8') as input_file :
     for key in input_vocab:
         input_file.write(key + " " + str(input_vocab[key]) + "\n")
+    input_file.write('<UNK> 100000')
 
 with open(OUTPUT_VOCAB_FILE,'w',encoding='utf-8') as output_file :
     for key in output_vocab:
         output_file.write(key + " " + str(output_vocab[key]) + "\n")
-
-            
+    output_file.write('<UNK> 100000')
+           
 with open(TRAIN_FILE,'w',encoding='utf-8') as train_file :
     for pair in train_data:
-        train_file.write(pair[0] + " " + pair[1] + "\n")
+        train_file.write(pair[0] + "   " + pair[1] + "\n")
 
 with open(TEST_FILE,'w',encoding='utf-8') as test_file :
     for pair in test_data:
-        test_file.write(pair[0] + " " + pair[1] + "\n")
+        test_file.write(pair[0] + "   " + pair[1] + "\n")
 
 with open(VALIDATION_FILE,'w',encoding='utf-8') as validn_file :
     for pair in validation_data:
-        validn_file.write(pair[0] + " " + pair[1] + "\n")
+        validn_file.write(pair[0] + "   " + pair[1] + "\n")
 
 
