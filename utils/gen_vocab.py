@@ -51,7 +51,7 @@ for i in range(0,len(FILES)):
                 validation_data.append((NLPUtils.to_lower(sentence,True),NLPUtils.to_lower(sql,True)))
             print(index)
             index+=1
-            if(index==2000):
+            if(index==3000):
                 break
 
 input_vocab = dict(sorted(input_vocab.items(), key=lambda item: item[1]))
