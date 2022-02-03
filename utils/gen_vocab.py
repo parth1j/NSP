@@ -112,8 +112,7 @@ def transform(sentence,vocab):
             continue
         else :
             temp_arr.append(sent_tokens[i])
-    if sent_tokens[len(sent_tokens)-2]!=sent_tokens[len(sent_tokens)-1]:
-        temp_arr.append(sent_tokens[len(sent_tokens)-1])
+    temp_arr.append(sent_tokens[len(sent_tokens)-1])
     return ' '.join(temp_arr)
     
 
@@ -128,25 +127,30 @@ for i in range(0,len(validation_data)):
 
 
 with open(INPUT_VOCAB_FILE,'w',encoding='utf-8') as input_file :
+    input_file.truncate(0)
     for key in input_vocab:
         input_file.write(key + " " + str(input_vocab[key]) + "\n")
     input_file.write('<UNK> 100000')
 
 with open(OUTPUT_VOCAB_FILE,'w',encoding='utf-8') as output_file :
+    output_file.truncate(0)
     for key in output_vocab:
         output_file.write(key + " " + str(output_vocab[key]) + "\n")
     output_file.write('<UNK> 100000')
 
             
 with open(TRAIN_FILE,'w',encoding='utf-8') as train_file :
+    train_file.truncate(0)
     for pair in train_data:
         train_file.write(pair[0] + "   " + pair[1] + "\n")
 
 with open(TEST_FILE,'w',encoding='utf-8') as test_file :
+    test_file.truncate(0)
     for pair in test_data:
         test_file.write(pair[0] + "   " + pair[1] + "\n")
 
 with open(VALIDATION_FILE,'w',encoding='utf-8') as validn_file :
+    validn_file.truncate(0)
     for pair in validation_data:
         validn_file.write(pair[0] + "   " + pair[1] + "\n")
 
