@@ -13,7 +13,7 @@ FILES = [
 
 NAMES = ['train','test']
 
-SQL_VOCAB = ['select','table','from','where','count','min','max','date','year']
+SQL_VOCAB = ['select','table','from','where','count','min','max','date','year','for','by']
 POS_TAGS = ['NOUN','NUM','ADJ','PROPN']
 
 INPUT_VOCAB_FILE = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\input_vocab.txt'
@@ -84,13 +84,36 @@ for i in range(0,len(FILES)):
                 test_data.append((transform(sentence),transform(sql)))
             print(index)
             index+=1
-            if(index==100):
+            if(index==10000):
                 break
 
 input_vocab = dict(sorted(input_vocab.items(), key=lambda item: item[1]))
 output_vocab = dict(sorted(output_vocab.items(), key=lambda item: item[1]))
 
+input_vocab["UNK"]=1
+output_vocab["UNK"]=1
 
+def cleanise(data,input_vocab,output_vocab) : 
+    for i in range(0,len(data)):
+        sentence = data[i][0].split(" ")
+        for j in range(0,len(sentence)):
+            if sentence[j] in input_vocab and input_vocab[sentence[j]] < 10 and nlp(sentence[j])[0].pos_ in ['NOUN','PROPN']:
+                sentence[j] = "UNK"
+                input_vocab["UNK"] =1 if "UNK" not in input_vocab else input_vocab["UNK"] + 1
+                del input_vocab[sentence[j]]
+        sql = data[i][1].split(" ")
+        for j in range(0,len(sql)):
+            if sql[j] in output_vocab and sql[j] not in SQL_VOCAB and output_vocab[sql[j]] < 10 and nlp(sql[j])[0].pos_ in ['NOUN','PROPN']:
+                sql[j] = "UNK"
+                output_vocab["UNK"]  = 1 if "UNK" not in output_vocab else output_vocab["UNK"] + 1
+                del output_vocab[sql[j]]
+        data[i] = (transform(' '.join(sentence)),transform(' '.join(sql)))
+    return data,input_vocab,output_vocab
+
+
+train_data,input_vocab,output_vocab = cleanise(train_data,input_vocab,output_vocab)
+test_data,input_vocab,output_vocab = cleanise(test_data,input_vocab,output_vocab)
+ 
 with open(INPUT_VOCAB_FILE,'w',encoding='utf-8') as input_file :
     input_file.truncate(0)
     for key in input_vocab:
