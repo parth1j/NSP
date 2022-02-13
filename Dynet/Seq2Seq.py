@@ -1,8 +1,8 @@
 # files
-TEST_FILE = "data/test.txt"
-TRAIN_FILE = "data/train.txt"
-F_VOCAB_FILE = "data/vocab.f.txt"
-Q_VOCAB_FILE = "data/vocab.q.txt"
+TEST_FILE = r"C:\Users\admin\Desktop\Sent2LogicalForm\data\test.txt"
+TRAIN_FILE = r"C:\Users\admin\Desktop\Sent2LogicalForm\data\train.txt"
+F_VOCAB_FILE = r"C:\Users\admin\Desktop\Sent2LogicalForm\data\output_vocab.txt"
+Q_VOCAB_FILE = r"C:\Users\admin\Desktop\Sent2LogicalForm\data\input_vocab.txt"
 
 
 import dynet_config
@@ -23,7 +23,7 @@ random.seed(33)
 
 def read_data(fh):
     for line in fh:
-        sentence, lf = line.strip().split("\t")
+        sentence, lf = line.strip().split("   ")
         sentence = sentence.split()
         lf = lf.split()
         yield sentence, lf
@@ -31,7 +31,7 @@ def read_data(fh):
 
 def read_vocab(filename):
     t2i = {"_UNK": 0, "<s>": 1, "</s>": 2}
-    with open(filename) as target:
+    with open(filename, encoding="utf8") as target:
         for line in target:
             token = line.strip().split()[0]
             if token not in t2i:
@@ -112,7 +112,7 @@ class Seq2Seq:
         )
 
     def train(self, train_path):
-        with open(train_path, "r") as train:
+        with open(train_path, "r", encoding="utf8") as train:
             shuffledData = list(read_data(train))
             random.shuffle(shuffledData)
 

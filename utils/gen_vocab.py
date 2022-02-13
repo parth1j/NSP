@@ -27,6 +27,7 @@ train_data=[]
 test_data=[]
 index=0
 
+# removes duplicate consecutive tokens from sentence
 def transform(sentence):
     sent_tokens = sentence.split(" ")
     temp_arr=[]
@@ -34,7 +35,7 @@ def transform(sentence):
         if sent_tokens[i]==sent_tokens[i+1] :
             continue
         else :
-            temp_arr.append(sent_tokens[i])
+            temp_arr.append(sent_tokens[i])       
     temp_arr.append(sent_tokens[len(sent_tokens)-1])
     return ' '.join(temp_arr)
 
@@ -84,7 +85,7 @@ for i in range(0,len(FILES)):
                 test_data.append((transform(sentence),transform(sql)))
             print(index)
             index+=1
-            if(index==10000):
+            if(index==5000):
                 break
 
 input_vocab = dict(sorted(input_vocab.items(), key=lambda item: item[1]))
@@ -93,6 +94,7 @@ output_vocab = dict(sorted(output_vocab.items(), key=lambda item: item[1]))
 input_vocab["UNK"]=1
 output_vocab["UNK"]=1
 
+#removes redundant nouns in sentence
 def cleanise(data,input_vocab,output_vocab) : 
     for i in range(0,len(data)):
         sentence = data[i][0].split(" ")
