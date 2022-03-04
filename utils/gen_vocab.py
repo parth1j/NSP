@@ -1,6 +1,7 @@
 import csv
 from nlp_utils import NLPUtils
 import spacy
+import sys
 
 nlp = spacy.load("en_core_web_sm")
 print("loaded")
@@ -11,6 +12,7 @@ FILES = [
 ]
 
 NAMES = ['train','test']
+COUNT = int(sys.argv[1])
 
 SQL_VOCAB = ['select','table','from','where','count','min','max','date','year','for','by']
 POS_TAGS = ['NOUN','NUM','ADJ','PROPN']
@@ -86,7 +88,7 @@ for i in range(0,len(FILES)):
                 test_data.append((transform(sentence),transform(sql)))
             print(index)
             index+=1
-            if(index==5000):
+            if(index==COUNT):
                 break
 
 input_vocab = dict(sorted(input_vocab.items(), key=lambda item: item[1]))
