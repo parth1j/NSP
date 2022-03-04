@@ -86,7 +86,7 @@ for i in range(0,len(FILES)):
                 test_data.append((transform(sentence),transform(sql)))
             print(index)
             index+=1
-            if(index==7000):
+            if(index==5000):
                 break
 
 input_vocab = dict(sorted(input_vocab.items(), key=lambda item: item[1]))
