@@ -14,7 +14,7 @@ sql_vocab = {}
 pairs=[]
 index=0
 
-with open('sql_vocab.txt') as vocab_file:
+with open('/content/Sent2LogicalForm/data/sql_vocab.txt') as vocab_file:
     tokens = vocab_file.readlines()
     for token in tokens:
         sql_vocab[token.lower()] = True
