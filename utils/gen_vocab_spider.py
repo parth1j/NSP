@@ -22,7 +22,6 @@ with open('sql_vocab.txt') as vocab_file:
 # Opening JSON file
 with open(INPUT_FILE) as json_file:
     data = json.load(json_file)
-    print(len(data))
     for entry in data:
         token_index=0
         word_dict = {}
@@ -32,19 +31,15 @@ with open(INPUT_FILE) as json_file:
         tokens = list(entry['question_toks'])
         for i in range(0,len(tokens)):
             pos_tag = nlp(tokens[i])[0]
-            if pos_tag.pos_ in POS_TAGS :
-              word_dict[pos_tag.lemma_] = pos_tag.pos_.lower() + str(token_index)
-              token_index+=1
+            if pos_tag.pos_=='NUM' :
+              word_dict[pos_tag.lemma_] = "value"
               sentence += word_dict[pos_tag.lemma_] + " "
-            elif pos_tag.pos_=='NUM' :
-              word_dict[tokens[i]] = "value"
-              sentence += word_dict[tokens[i]] + " "
             else :
               sentence += pos_tag.lemma_ + " "
         tokens = list(entry['query_toks_no_value'])
         for i in range(0,len(tokens)):
             pos_tag = nlp(tokens[i])[0]
-            if pos_tag.lemma_ in word_dict and tokens[i] not in sql_vocab and tokens[i] not in SQL_FUNC_VOCAB:
+            if pos_tag.lemma_ in word_dict :
                 sql = sql + word_dict[pos_tag.lemma_] + " "
             else :
                 sql = sql + pos_tag.lemma_ + " "
