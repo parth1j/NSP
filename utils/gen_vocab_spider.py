@@ -54,7 +54,7 @@ with open(INPUT_FILE) as json_file:
         for i in range(0,len(sql_tokens)):
             if sql_tokens[i] in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
                 continue
-            if tokens[i] in alias_table:
+            if sql_tokens[i] in alias_table:
                 sql_tokens[i] = sql_literals['alais']
             if '.' in list(sql_tokens[i]) and len(sql_tokens[i].split('.'))==2:
                 alias_table[sql_tokens[i].split('.')[0]] = True
