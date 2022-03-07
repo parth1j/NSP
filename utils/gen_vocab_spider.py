@@ -7,7 +7,7 @@ print("loaded")
 
 INPUT_FILE = sys.argv[1]
 OUTPUT_FILE = sys.argv[2]
-COUNT = sys.argv[3]
+COUNT = int(sys.argv[3])
 SQL_FUNC_VOCAB = ['avg','count','first','last','sum','min','max','date','year','for','by']
 
 sql_vocab = {}
@@ -23,13 +23,14 @@ with open('/content/Sent2LogicalForm/data/sql_vocab.txt') as vocab_file:
 with open('/content/Sent2LogicalForm/data/tables.json') as file:
     table_data = json.load(file)
     for entry in table_data:
+        table_props[entry['db_id']] = {}
         table_props[entry['db_id']]['columns'] = [column[1].lower() for column in entry['column_names_original']]
         if 'table_names' in table_props:
             for table_name in entry['table_names_original']:
                 table_props['table_names'][table_name] = True
         else: table_props['table_names'] = {}
 
-sql_tokens = {
+sql_literals = {
     'column' : '<attr>',
     'alais' : '<al>',
     'table' : '<table>'
@@ -44,19 +45,22 @@ with open(INPUT_FILE) as json_file:
         for i in range(0,len(tokens)):
             pos_tag = nlp(tokens[i])[0]
             if pos_tag.lemma_ in table_props[entry['db_id']]['columns']:
-                tokens[i] = sql_tokens['column']
-            if pos_tag.lemma_ in table_props[entry['db_id']]['table_names']:
-                tokens[i] = sql_tokens['table']
+              tokens[i] = sql_literals['column']
+            elif pos_tag.pos_ in ['PROPN','NUM'] or "'" in list(tokens[i]):
+              tokens[i] = 'value'
         sql_tokens = list(entry['query_toks'])
         for i in range(0,len(sql_tokens)):
             if sql_tokens[i] in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
                 continue
             if '.' in list(sql_tokens[i]) and len(sql_tokens[i].split('.'))==2:
-                sql_tokens[i] = sql_tokens['alais']+'.'+sql_tokens['column']
+                sql_tokens[i] = sql_literals['alais']+'.'+sql_literals['column']
+            if "'" in list(sql_tokens[i]) or sql_tokens[i].isdigit()==True:
+                sql_tokens[i] = 'value'
             if sql_tokens[i] in table_props[entry['db_id']]['columns']:
-                sql_tokens[i] = sql_tokens['column']
-            if sql_tokens[i] in table_props[entry['db_id']]['table_names']:
-                sql_tokens[i] = sql_tokens['table']
+                sql_tokens[i] = sql_literals['column']
+            if sql_tokens[i] in table_props['table_names']:
+                sql_tokens[i] = sql_literals['table']
+        
         sentence = ' '.join(tokens)
         sql = ' '.join(sql_tokens)
         print(sentence)
