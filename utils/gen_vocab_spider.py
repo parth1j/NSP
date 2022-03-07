@@ -2,8 +2,6 @@ import json
 import spacy
 import sys
 
-from utils.gen_vocab import COUNT
-
 nlp = spacy.load("en_core_web_sm")
 print("loaded")
 
