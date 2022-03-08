@@ -1,4 +1,3 @@
-from ast import alias
 import json
 import spacy
 import sys
@@ -37,6 +36,7 @@ sql_literals = {
     'table' : '<table>'
 }
 
+
 # Opening JSON file
 with open(INPUT_FILE) as json_file:
     data = json.load(json_file)
@@ -45,9 +45,9 @@ with open(INPUT_FILE) as json_file:
         tokens = list(entry['question_toks'])
         for i in range(0,len(tokens)):
             pos_tag = nlp(tokens[i])[0]
-            if pos_tag.lemma_ in table_props[entry['db_id']]['columns']:
-              tokens[i] = sql_literals['column']
-            elif pos_tag.pos_ in ['PROPN','NUM'] or "'" in list(tokens[i]):
+            if pos_tag.pos_ in ['PROPN','NOUN']:
+              tokens[i] = '<noun>'
+            elif pos_tag.pos_ in ['NUM'] or "'" in list(tokens[i]):
               tokens[i] = 'value'
         sql_tokens = list(entry['query_toks'])
         alias_table={}
@@ -65,6 +65,8 @@ with open(INPUT_FILE) as json_file:
                 sql_tokens[i] = sql_literals['column']
             if sql_tokens[i] in table_props['table_names']:
                 sql_tokens[i] = sql_literals['table']
+            if nlp(sql_tokens[i])[0].pos_ in  ['PROPN','NOUN']:
+                sql_tokens[i] = '<noun>'
         
         sentence = ' '.join(tokens)
         sql = ' '.join(sql_tokens)
