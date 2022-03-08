@@ -5,9 +5,13 @@ import sys
 nlp = spacy.load("en_core_web_sm")
 print("loaded")
 
-INPUT_FILE = sys.argv[1]
-OUTPUT_FILE = sys.argv[2]
-COUNT = int(sys.argv[3])
+INPUT_FILES = [
+    '/content/Sent2LogicalForm/data/train_spider.json',
+    '/content/Sent2LogicalForm/data/train_others.json',
+    '/content/Sent2LogicalForm/data/dev.json'
+]
+OUTPUT_FILE = sys.argv[1]
+COUNT = int(sys.argv[2])
 SQL_FUNC_VOCAB = ['avg','count','first','last','sum','min','max','date','year','for','by']
 
 sql_vocab = {}
@@ -38,43 +42,41 @@ sql_literals = {
 
 
 # Opening JSON file
-with open(INPUT_FILE) as json_file:
-    data = json.load(json_file)
-    for entry in data:
-        print(index)
-        tokens = list(entry['question_toks'])
-        for i in range(0,len(tokens)):
-            pos_tag = nlp(tokens[i])[0]
-            if pos_tag.pos_ in ['PROPN','NOUN']:
-              tokens[i] = '<noun>'
-            elif pos_tag.pos_ in ['NUM'] or "'" in list(tokens[i]):
-              tokens[i] = 'value'
-        sql_tokens = list(entry['query_toks'])
-        alias_table={}
-        for i in range(0,len(sql_tokens)):
-            if sql_tokens[i] in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
+for INPUT_FILE in INPUT_FILES:
+    with open(INPUT_FILE) as json_file:
+        data = json.load(json_file)
+        for entry in data:
+            print(index)
+            tokens = ' '.join(list(entry['question_toks'])).lower().split(" ")
+            for i in range(1,len(tokens)):
+                pos_tag = nlp(tokens[i])[0]
+                if pos_tag.pos_ in ['PROPN','NOUN']:
+                    tokens[i] = '<noun>'
+                elif pos_tag.pos_ in ['NUM'] or "'" in list(tokens[i]):
+                    tokens[i] = 'value'
+            sql_tokens = list(entry['query_toks_no_value'])
+            alias_table={}
+            if "join" in sql_tokens:
                 continue
-            elif sql_tokens[i] in alias_table:
-                sql_tokens[i] = sql_literals['alais']
-            elif '.' in list(sql_tokens[i]) and len(sql_tokens[i].split('.'))==2:
-                alias_table[sql_tokens[i].split('.')[0]] = True
-                sql_tokens[i] = sql_literals['alais']+'.'+sql_literals['column']
-            elif "'" in list(sql_tokens[i]) or sql_tokens[i].isdigit()==True:
-                sql_tokens[i] = 'value'
-            elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
-                sql_tokens[i] = sql_literals['column']
-            elif sql_tokens[i] in table_props['table_names']:
-                sql_tokens[i] = sql_literals['table']
-        
-        sentence = ' '.join(tokens)
-        sql = ' '.join(sql_tokens)
-        print(sentence)
-        print(sql)
-        print("")
-        pairs.append((sentence,sql))
-        index+=1
-        if index==COUNT:
-            break
+            for i in range(0,len(sql_tokens)):
+                if sql_tokens[i] in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
+                    continue
+                elif sql_tokens[i]=='``':
+                    sql_tokens[i]=""
+                elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
+                    sql_tokens[i] = sql_literals['column']
+                elif sql_tokens[i] in table_props['table_names']:
+                    sql_tokens[i] = sql_literals['table']
+            
+            sentence = ' '.join(tokens)
+            sql = ' '.join(sql_tokens)
+            print(sentence)
+            print(sql)
+            print("")
+            pairs.append((sentence,sql))
+            index+=1
+            if index==COUNT:
+                break
 
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     for pair in pairs:
