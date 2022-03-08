@@ -50,10 +50,8 @@ for INPUT_FILE in INPUT_FILES:
             tokens = ' '.join(list(entry['question_toks'])).lower().split(" ")
             for i in range(1,len(tokens)):
                 pos_tag = nlp(tokens[i])[0]
-                if pos_tag.pos_ in ['PROPN','NOUN']:
-                    tokens[i] = '<noun>'
-                elif pos_tag.pos_ in ['NUM'] or "'" in list(tokens[i]):
-                    tokens[i] = 'value'
+                if pos_tag.pos_ not in ['PUNCT']:
+                    tokens[i] = pos_tag.lemma_
             sql_tokens = list(entry['query_toks_no_value'])
             alias_table={}
             if "join" in sql_tokens:
