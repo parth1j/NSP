@@ -66,7 +66,7 @@ for INPUT_FILE in INPUT_FILES:
                     sql_tokens[i] = sql_literals['column']
                 elif sql_tokens[i] in table_props['table_names']:
                     sql_tokens[i] = sql_literals['table']
-                if pos_tag.pos_=='PUNCT' and tokens[i]!='=':
+                if pos_tag.pos_=='PUNCT' and sql_tokens[i]!='=':
                     sql_tokens[i] = ''
             
             sentence = ' '.join(tokens)
