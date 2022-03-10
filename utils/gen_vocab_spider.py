@@ -85,7 +85,7 @@ print(len(list(table_props['table_names'])))
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     train_file.truncate(0)
     for pair in pairs:
-        train_file.write(pair[0] + "   " + pair[1] + "\n")
+        train_file.write(pair[0] + "   " + pair[1] + "   " + pair[2] + "\n")
 
 with open(PROPS_FILE,'w',encoding='utf-8') as json_file :
     json_file.truncate(0)
