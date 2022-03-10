@@ -4,6 +4,7 @@ data/GoogleNews-vectors-negative300-SLIM.bin
 .ipynb_checkpoints
 server/venv
 data/saved-parameters
+database
 out/
 *.odg
 *#

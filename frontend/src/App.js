@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css';
 import AceEditor from "react-ace";
-
+import axios from "axios";
 import "ace-builds/src-noconflict/mode-sql";
 import "ace-builds/src-noconflict/theme-github";
 
@@ -15,6 +15,11 @@ const styles = {
   }
 }
 
+const URLS = {
+  0 : 'http://127.0.0.1:5000/tranx',
+  1 : 'http://127.0.0.1:5000/yale'
+}
+
 const INITIAL_STATE = {
   inputText : '',
   outputSql : '',
@@ -23,9 +28,56 @@ const INITIAL_STATE = {
 
 function App() {
   const [state,setState] = React.useState(INITIAL_STATE)
+  const [results,setResults] = React.useState([])
 
-  const onSubmit=()=>{
+  const onSubmit= async ()=>{
+    let inputs = state.inputText.split("\n")
+    let outputs = ""
+    try {
+      for(let i=0;i<inputs.length;i++){
+        let input = inputs[i];
+        const response = await axios.post(
+          URLS[state.parser],
+          {
+            "sentence" : input
+          }
+        )
+        if(response.status!==200){
+          throw new Error("Failed to fetch query")
+        }
+        outputs += response.data.output + "\n"
+      }
+      onChangeOutput(outputs)
+    } catch (error) {
+      window.alert(error)
+      console.error(error)
+    }
+  }
 
+  const onExecute=()=>{
+    try {
+      state.outputSql.split("\n").forEach(
+        async (query,index)=>{
+          const response = await axios.post(
+            'http://127.0.0.1:5000/execute',
+            {
+              query : query
+            }
+          )
+          if(response.status!==200){
+            throw new Error("Failed to fetch query")
+          }
+          results.push({
+            id : `query(${index})`,
+            result : response.result
+          })
+        }
+      )
+      setResults(results)
+    } catch (error) {
+      window.alert(error)
+      console.error(error)
+    }
   }
 
   const onClear=()=>setState(INITIAL_STATE)
@@ -37,11 +89,11 @@ function App() {
     })
   )
 
-  const onChangeOutput=(e)=>{
+  const onChangeOutput=(value)=>{
     setState(
       prevState=>({
         ...prevState,
-        outputSql : e.target.value
+        outputSql :value
       })
     )
   }
@@ -88,7 +140,8 @@ function App() {
             value={state.inputText}
             onChange={onChangeInput}></textarea>
           <div className='results'>
-            <h4>Results to be displayed here</h4>
+            <h4>Get Results for SQL queries</h4>
+            <button className='button' id='exe' onClick={onExecute}>Execute</button>
           </div>
         </div>
         <AceEditor

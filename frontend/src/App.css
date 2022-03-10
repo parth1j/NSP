@@ -45,11 +45,20 @@ html, body, #app, #app>div {
   color: blue;
 }
 
+#exe {
+  background-color: blue;
+  color: white;
+  font-size: medium;
+}
+
 textarea {
   resize: none;
 }
 
 .results {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-radius: 10px;
   padding: 10px;
   margin: 10px;

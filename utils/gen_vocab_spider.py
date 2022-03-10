@@ -63,17 +63,16 @@ for INPUT_FILE in INPUT_FILES:
                 continue
             for i in range(0,len(sql_tokens)):
                 pos_tag = nlp(sql_tokens[i])[0]
-                print(sql_tokens[i])
                 if pos_tag.pos_=='PUNCT' and sql_tokens[i] in puncts and  sql_tokens[i]!='=':
                     continue
-                if sql_tokens[i].lower() in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
+                if sql_tokens[i].lower() + "\n" in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
                     sql_tokens_list.append(sql_tokens[i])
                 elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
                     sql_tokens_list.append(sql_tokens[i])
                 elif sql_tokens[i] in table_props['table_names']:
                     sql_tokens_list.append(sql_literals['table'])
-                elif sql_tokens[i].isdigit()==True:
-                    sql_tokens_list.append("value")
+                elif sql_tokens[i]=='=' or sql_tokens[i]=='value':
+                    sql_tokens_list.append(sql_tokens[i])
             
             sentence = ' '.join(tokens_list)
             sql = ' '.join(sql_tokens_list)

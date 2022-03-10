@@ -10,12 +10,12 @@ class EncoderRNN(nn.Module):
         self.hidden_size = hidden_size
 
         self.embedding = nn.Embedding(input_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size)
+        self.lstm = nn.LSTM(hidden_size, hidden_size,num_layers=1)
 
-    def forward(self, input, hidden):
+    def forward(self, input,context, hidden):
         embedded = self.embedding(input).view(1, 1, -1)
         output = embedded
-        output, hidden = self.gru(output, hidden)
+        output, (hidden,context) = self.lstm(output,(hidden,context))
         return output, hidden
 
     def initHidden(self):
@@ -33,10 +33,10 @@ class AttnDecoderRNN(nn.Module):
         self.attn = nn.Linear(self.hidden_size * 2, self.max_length)
         self.attn_combine = nn.Linear(self.hidden_size * 2, self.hidden_size)
         self.dropout = nn.Dropout(self.dropout_p)
-        self.gru = nn.GRU(self.hidden_size, self.hidden_size)
+        self.lstm = nn.LSTM(self.hidden_size, self.hidden_size,num_layers=1)
         self.out = nn.Linear(self.hidden_size, self.output_size)
 
-    def forward(self, input, hidden, encoder_outputs):
+    def forward(self, input,context, hidden, encoder_outputs):
         embedded = self.embedding(input).view(1, 1, -1)
         embedded = self.dropout(embedded)
 
@@ -47,18 +47,19 @@ class AttnDecoderRNN(nn.Module):
         output = self.attn_combine(output).unsqueeze(0)
 
         output = F.relu(output)
-        output, hidden = self.gru(output, hidden)
+        output,(hidden,context) = self.lstm(output,(hidden,context))
 
         output = F.log_softmax(self.out(output[0]), dim=1)
-        return output, hidden, attn_weights
+        return output,(hidden,context), attn_weights
 
     def initHidden(self):
         return torch.zeros(1, 1, self.hidden_size, device=device)
 
-def getSavedModel(encoder_path,decoder_path,device) :
+
+def getSavedModel(encoder_path,decoder_path,input_lang,output_lang,device) :
     hidden_size = 256
-    encoder = EncoderRNN(1974, hidden_size).to(device)
-    attn_decoder = AttnDecoderRNN(hidden_size,225, dropout_p=0.1).to(device)
-    encoder.load_state_dict(torch.load(encoder_path))
-    attn_decoder.load_state_dict(torch.load(decoder_path))
+    encoder = EncoderRNN(input_lang.n_words, hidden_size).to(device)
+    attn_decoder = AttnDecoderRNN(hidden_size,output_lang.n_words, dropout_p=0.1).to(device)
+    encoder.load_state_dict(torch.load(encoder_path,map_location=torch.device(device)))
+    attn_decoder.load_state_dict(torch.load(decoder_path,map_location=torch.device(device)))
     return encoder,attn_decoder

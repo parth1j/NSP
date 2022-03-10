@@ -51,6 +51,13 @@ def normalizeString(s):
 def getLangs():
     input_lang = Lang('english')
     output_lang = Lang('sql')
+     # Read the file and split into lines
+    lines = open(r'C:\Users\admin\Desktop\Sent2LogicalForm\data\train_spider.txt', encoding='utf-8').read().strip().split('\n')
+    # Split every line into pairs and normalize
+    pairs = [[normalizeString(s) for s in l.split('   ')] for l in lines]
+    for pair in pairs:
+        input_lang.addSentence(pair[0])
+        output_lang.addSentence(pair[1])
     return input_lang, output_lang
     
 def indexesFromSentence(lang, sentence):
@@ -97,5 +104,7 @@ def preprocess(sentence):
       pos_tag = nlp(tokens[i])[0]
       if pos_tag.pos_ not in ['PUNCT']:
         tokens[i] = pos_tag.lemma_
+      elif tokens[i].isdigit()==True:
+        tokens[i] = "value"
         
   return ' '.join(tokens),columns,tables
