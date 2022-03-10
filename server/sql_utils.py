@@ -2,18 +2,22 @@ import unicodedata
 import json
 import spacy
 import torch
+import re
+import string
 
-nlp = spacy.load("en_core_web_sm")
-print("loaded")
+tok = spacy.load('en')
+def tokenize (text):
+    regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]') 
+    nopunct = regex.sub("", text.lower())
+    nopunct = re.sub(' +', ' ', nopunct)
+    return [token.text for token in tok.tokenizer(nopunct)]
 
 SQL_FUNC_VOCAB = ['avg','count','first','last','sum','min','max','date','year','for','by']
-
 sql_literals = {
     'column' : '<attr>',
     'alais' : '<al>',
     'table' : '<table>'
 }
-
 
 STD_SQL_QUERY_TOKEN = {
     "select",
@@ -70,8 +74,6 @@ def normalizeString(s):
     s = unicodeToAscii(s.lower().strip())
     return s
 
-
-
 def getLangs():
     input_lang = Lang('english')
     output_lang = Lang('sql')
@@ -106,25 +108,10 @@ def get_sql_vocab():
     return sql_vocab
 
 def get_tables_info():
-    table_props={}
-    with open(r'C:\Users\admin\Desktop\Sent2LogicalForm\data\tables.json') as file:
-        table_data = json.load(file)
-        for entry in table_data:
-            table_props[entry['db_id']] = {}
-            table_props[entry['db_id']]['columns'] = [column[1].lower() for column in entry['column_names_original']]
-            if 'table_names' in table_props:
-                for table_name in entry['table_names_original']:
-                    table_props['table_names'][table_name] = True
-            else: table_props['table_names'] = {}
+    with open(r'C:\Users\admin\Desktop\Sent2LogicalForm\data\tables_props.json') as file:
+        table_props = json.load(file)
     return table_props
 
 
 def preprocess(sentence):
-  tokens = sentence.lower().split()
-  for i in range(0,len(tokens)):
-      pos_tag = nlp(tokens[i])[0]
-      if pos_tag.pos_ not in ['PUNCT']:
-        tokens[i] = pos_tag.lemma_
-      elif tokens[i].isdigit()==True:
-        tokens[i] = "value"
-  return ' '.join(tokens)
+  return tokenize(sentence)

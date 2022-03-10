@@ -43,6 +43,7 @@ sql_literals = {
     'table' : '<table>'
 }
 
+relevant_tables = {}
 # Opening JSON file
 for INPUT_FILE in INPUT_FILES:
     with open(INPUT_FILE) as json_file:
@@ -56,6 +57,7 @@ for INPUT_FILE in INPUT_FILES:
                 continue
             for i in range(0,len(sql_tokens)):
                 if sql_tokens[i] in table_props['table_names']:
+                    relevant_tables[sql_tokens[i]] = True
                     sql_tokens_list.append(sql_literals['table'])
                 else:
                     sql_tokens_list.append(sql_tokens[i])
@@ -70,6 +72,12 @@ for INPUT_FILE in INPUT_FILES:
                 break
     if index==COUNT:
         break
+
+for key in table_props['table_names']:
+    if key not in relevant_tables:
+        del table_props['table_names'][key]
+
+print(table_props['table_names'])
 
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     for pair in pairs:
