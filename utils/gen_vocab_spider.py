@@ -29,7 +29,9 @@ with open('/content/Sent2LogicalForm/data/tables.json') as file:
     table_data = json.load(file)
     for entry in table_data:
         table_props[entry['db_id']] = {}
-        table_props[entry['db_id']]['columns'] = [ ''.join(tokenize(column[1])) for column in entry['column_names_original']]
+        table_props[entry['db_id']]['columns'] = {} 
+        for column in entry['column_names_original']:
+            table_props[entry['db_id']]['columns'][''.join(tokenize(column[1]))] = column[1]
         if 'table_names' in table_props:
             for table_name in entry['table_names_original']:
                 table_props['table_names'][table_name] = entry['db_id']
