@@ -11,6 +11,7 @@ INPUT_FILES = [
 ]
 OUTPUT_FILE = sys.argv[1]
 COUNT = int(sys.argv[2])
+PROPS_FILE = "/content/Sent2LogicalForm/data/table_props.json"
 
 table_props={}
 pairs=[]
@@ -20,17 +21,18 @@ index=0
 tok = spacy.load('en')
 def tokenize (text):
     regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]') # remove punctuation and numbers
-    nopunct = regex.sub(" ", text.lower())
+    nopunct = regex.sub("", text.lower())
+    nopunct = re.sub(' +', ' ', nopunct)
     return [token.text for token in tok.tokenizer(nopunct)]
 
 with open('/content/Sent2LogicalForm/data/tables.json') as file:
     table_data = json.load(file)
     for entry in table_data:
         table_props[entry['db_id']] = {}
-        table_props[entry['db_id']]['columns'] = [column[1].lower() for column in entry['column_names_original']]
+        table_props[entry['db_id']]['columns'] = [ ''.join(tokenize(column[1])) for column in entry['column_names_original']]
         if 'table_names' in table_props:
             for table_name in entry['table_names_original']:
-                table_props['table_names'][table_name] = True
+                table_props['table_names'][table_name] = entry['db_id']
         else: table_props['table_names'] = {}
 
 sql_literals = {
@@ -69,5 +71,7 @@ for INPUT_FILE in INPUT_FILES:
 
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     for pair in pairs:
-        print(pair)
         train_file.write(pair[0] + "   " + pair[1] + "\n")
+
+with open(PROPS_FILE,'w',encoding='utf-8') as json_file :
+    json.dump(table_props,json_file)
