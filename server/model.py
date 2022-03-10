@@ -8,7 +8,6 @@ class EncoderRNN(nn.Module):
     def __init__(self, input_size, hidden_size):
         super(EncoderRNN, self).__init__()
         self.hidden_size = hidden_size
-
         self.embedding = nn.Embedding(input_size, hidden_size)
         self.lstm = nn.LSTM(hidden_size, hidden_size,num_layers=1)
 
@@ -39,16 +38,12 @@ class AttnDecoderRNN(nn.Module):
     def forward(self, input,context, hidden, encoder_outputs):
         embedded = self.embedding(input).view(1, 1, -1)
         embedded = self.dropout(embedded)
-
         attn_weights = F.softmax(self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)
         attn_applied = torch.bmm(attn_weights.unsqueeze(0),encoder_outputs.unsqueeze(0))
-
         output = torch.cat((embedded[0], attn_applied[0]), 1)
         output = self.attn_combine(output).unsqueeze(0)
-
         output = F.relu(output)
         output,(hidden,context) = self.lstm(output,(hidden,context))
-
         output = F.log_softmax(self.out(output[0]), dim=1)
         return output,(hidden,context), attn_weights
 

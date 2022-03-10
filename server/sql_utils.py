@@ -7,10 +7,32 @@ nlp = spacy.load("en_core_web_sm")
 print("loaded")
 
 SQL_FUNC_VOCAB = ['avg','count','first','last','sum','min','max','date','year','for','by']
+
 sql_literals = {
     'column' : '<attr>',
     'alais' : '<al>',
     'table' : '<table>'
+}
+
+
+STD_SQL_QUERY_TOKEN = {
+    "select",
+    "distinct",
+    "agg"
+    "column"
+    "from",
+    "table",
+    "where",
+    "column",
+    "op",
+    "value",
+    "groupBy",
+    "having",
+    "orderBy",
+    "limit",
+    "intersect",
+    "union",
+    "except"
 }
 
 SOS_token = 0
@@ -47,6 +69,8 @@ def unicodeToAscii(s):
 def normalizeString(s):
     s = unicodeToAscii(s.lower().strip())
     return s
+
+
 
 def getLangs():
     input_lang = Lang('english')
@@ -97,14 +121,10 @@ def get_tables_info():
 
 def preprocess(sentence):
   tokens = sentence.lower().split()
-  columns=[]
-  tables=[]
-  
   for i in range(0,len(tokens)):
       pos_tag = nlp(tokens[i])[0]
       if pos_tag.pos_ not in ['PUNCT']:
         tokens[i] = pos_tag.lemma_
       elif tokens[i].isdigit()==True:
         tokens[i] = "value"
-        
-  return ' '.join(tokens),columns,tables
+  return ' '.join(tokens)

@@ -1,9 +1,8 @@
 import json
 import spacy
 import sys
-
-nlp = spacy.load("en_core_web_sm")
-print("loaded")
+import re
+import string
 
 INPUT_FILES = [
     '/content/Sent2LogicalForm/data/train_spider.json',
@@ -12,17 +11,17 @@ INPUT_FILES = [
 ]
 OUTPUT_FILE = sys.argv[1]
 COUNT = int(sys.argv[2])
-SQL_FUNC_VOCAB = ['avg','count','first','last','sum','min','max','date','year','for','by']
 
-sql_vocab = {}
 table_props={}
 pairs=[]
 index=0
 
-with open('/content/Sent2LogicalForm/data/sql_vocab.txt') as vocab_file:
-    tokens = vocab_file.readlines()
-    for token in tokens:
-        sql_vocab[token.lower()] = True
+#tokenization
+tok = spacy.load('en')
+def tokenize (text):
+    regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]') # remove punctuation and numbers
+    nopunct = regex.sub(" ", text.lower())
+    return [token.text for token in tok.tokenizer(nopunct)]
 
 with open('/content/Sent2LogicalForm/data/tables.json') as file:
     table_data = json.load(file)
@@ -40,41 +39,23 @@ sql_literals = {
     'table' : '<table>'
 }
 
-puncts = [',',"?","``",".","(",")","#","$","*"]
-
 # Opening JSON file
 for INPUT_FILE in INPUT_FILES:
     with open(INPUT_FILE) as json_file:
         data = json.load(json_file)
         for entry in data:
             print(index)
-            tokens=' '.join(list(entry['question_toks'])).lower().split(" ")
-            tokens_list = []
-            for i in range(0,len(tokens)):
-                pos_tag = nlp(tokens[i])[0]
-                if tokens[i] not in puncts:
-                    tokens_list.append(pos_tag.lemma_)
-                elif tokens[i].isdigit()==True:
-                    tokens_list.append("value")
-            sql_tokens = list(entry['query_toks_no_value'])
+            tokens=tokenize(' '.join(list(entry['question_toks'])))
+            sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
             sql_tokens_list = []
-            alias_table={}
             if "join" in sql_tokens:
                 continue
             for i in range(0,len(sql_tokens)):
-                pos_tag = nlp(sql_tokens[i])[0]
-                if pos_tag.pos_=='PUNCT' and sql_tokens[i] in puncts and  sql_tokens[i]!='=':
-                    continue
-                if sql_tokens[i].lower() + "\n" in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
-                    sql_tokens_list.append(sql_tokens[i])
-                elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
-                    sql_tokens_list.append(sql_tokens[i])
-                elif sql_tokens[i] in table_props['table_names']:
+                if sql_tokens[i] in table_props['table_names']:
                     sql_tokens_list.append(sql_literals['table'])
-                elif sql_tokens[i]=='=' or sql_tokens[i]=='value':
+                else:
                     sql_tokens_list.append(sql_tokens[i])
-            
-            sentence = ' '.join(tokens_list)
+            sentence = ' '.join(tokens)
             sql = ' '.join(sql_tokens_list)
             print(sentence)
             print(sql)
