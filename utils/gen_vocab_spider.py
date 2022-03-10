@@ -40,6 +40,7 @@ sql_literals = {
     'table' : '<table>'
 }
 
+puncts = [',',"?","``",".","(",")","#","$","*"]
 
 # Opening JSON file
 for INPUT_FILE in INPUT_FILES:
@@ -51,24 +52,23 @@ for INPUT_FILE in INPUT_FILES:
             tokens_list = []
             for i in range(0,len(tokens)):
                 pos_tag = nlp(tokens[i])[0]
-                if pos_tag.pos_ not in ['PUNCT']:
+                if tokens[i] not in puncts:
                     tokens_list.append(pos_tag.lemma_)
             sql_tokens = list(entry['query_toks_no_value'])
+            sql_tokens_list = []
             alias_table={}
             if "join" in sql_tokens:
                 continue
             for i in range(1,len(sql_tokens)):
                 pos_tag = nlp(sql_tokens[i])[0]
-                if sql_tokens[i] in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
+                if pos_tag.pos_=='PUNCT' and tokens[i] in puncts and  sql_tokens[i]!='=':
                     continue
-                elif sql_tokens[i]=='``':
-                    sql_tokens[i]=""
+                if sql_tokens[i] in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
+                    sql_tokens_list.append(tokens[i])
                 elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
-                    sql_tokens[i] = sql_literals['column']
+                    sql_tokens_list.append(tokens[i])
                 elif sql_tokens[i] in table_props['table_names']:
-                    sql_tokens[i] = sql_literals['table']
-                if pos_tag.pos_=='PUNCT' and sql_tokens[i]!='=':
-                    sql_tokens[i] = ''
+                    sql_tokens_list.append(sql_literals['table'])
             
             sentence = ' '.join(tokens_list)
             sql = ' '.join(sql_tokens)
