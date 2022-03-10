@@ -55,9 +55,11 @@ for INPUT_FILE in INPUT_FILES:
             sql_tokens_list = []
             if "join" in sql_tokens:
                 continue
+            table=None
             for i in range(0,len(sql_tokens)):
                 if sql_tokens[i] in table_props['table_names']:
                     relevant_tables[sql_tokens[i]] = True
+                    table = sql_tokens[i]
                     sql_tokens_list.append(sql_literals['table'])
                 else:
                     sql_tokens_list.append(sql_tokens[i])
@@ -66,22 +68,25 @@ for INPUT_FILE in INPUT_FILES:
             print(sentence)
             print(sql)
             print("")
-            pairs.append((sentence,sql))
+            pairs.append((sentence,sql,table))
             index+=1
             if index==COUNT:
                 break
     if index==COUNT:
         break
 
-for key in table_props['table_names']:
+temp = table_props['table_names']
+for key in list(temp):
     if key not in relevant_tables:
         del table_props['table_names'][key]
 
-print(table_props['table_names'])
+print(len(list(table_props['table_names'])))
 
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
+    train_file.truncate(0)
     for pair in pairs:
         train_file.write(pair[0] + "   " + pair[1] + "\n")
 
 with open(PROPS_FILE,'w',encoding='utf-8') as json_file :
+    json_file.truncate(0)
     json.dump(table_props,json_file)
