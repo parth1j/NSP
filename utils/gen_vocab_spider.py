@@ -54,6 +54,8 @@ for INPUT_FILE in INPUT_FILES:
                 pos_tag = nlp(tokens[i])[0]
                 if tokens[i] not in puncts:
                     tokens_list.append(pos_tag.lemma_)
+                elif tokens[i].isdigit()==True:
+                    tokens_list.append("value")
             sql_tokens = list(entry['query_toks_no_value'])
             sql_tokens_list = []
             alias_table={}
@@ -61,14 +63,17 @@ for INPUT_FILE in INPUT_FILES:
                 continue
             for i in range(0,len(sql_tokens)):
                 pos_tag = nlp(sql_tokens[i])[0]
+                print(sql_tokens[i])
                 if pos_tag.pos_=='PUNCT' and sql_tokens[i] in puncts and  sql_tokens[i]!='=':
                     continue
-                if sql_tokens[i] in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
+                if sql_tokens[i].lower() in sql_vocab or sql_tokens[i] in SQL_FUNC_VOCAB:
                     sql_tokens_list.append(sql_tokens[i])
                 elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
                     sql_tokens_list.append(sql_tokens[i])
                 elif sql_tokens[i] in table_props['table_names']:
                     sql_tokens_list.append(sql_literals['table'])
+                elif sql_tokens[i].isdigit()==True:
+                    sql_tokens_list.append("value")
             
             sentence = ' '.join(tokens_list)
             sql = ' '.join(sql_tokens_list)
