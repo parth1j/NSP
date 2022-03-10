@@ -59,7 +59,7 @@ for INPUT_FILE in INPUT_FILES:
             alias_table={}
             if "join" in sql_tokens:
                 continue
-            for i in range(1,len(sql_tokens)):
+            for i in range(0,len(sql_tokens)):
                 pos_tag = nlp(sql_tokens[i])[0]
                 if pos_tag.pos_=='PUNCT' and sql_tokens[i] in puncts and  sql_tokens[i]!='=':
                     continue
@@ -79,6 +79,8 @@ for INPUT_FILE in INPUT_FILES:
             index+=1
             if index==COUNT:
                 break
+    if index==COUNT:
+        break
 
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     for pair in pairs:
