@@ -1,4 +1,5 @@
 import json
+import typing_extensions
 import spacy
 import sys
 import re
@@ -67,6 +68,7 @@ for INPUT_FILE in INPUT_FILES:
             sql = ' '.join(sql_tokens_list)
             print(sentence)
             print(sql)
+            print(table)
             print("")
             pairs.append((sentence,sql,table))
             index+=1
@@ -85,7 +87,11 @@ print(len(list(table_props['table_names'])))
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     train_file.truncate(0)
     for pair in pairs:
-        train_file.write(pair[0] + "   " + pair[1] + "   " + pair[2] + "\n")
+        text = pair[0] + "   " + pair[1]
+        if pair[2]!=None:
+          text +=  "   " + pair[2]
+        else : text += "   " + "<UNK>"
+        train_file.write( text + "\n")
 
 with open(PROPS_FILE,'w',encoding='utf-8') as json_file :
     json_file.truncate(0)
