@@ -154,7 +154,7 @@ def predict_query(
     device,
     max_length=5000
 ):
-    sentence = preprocess(sentence)
+    sentence = ' '.join(preprocess(sentence))
     with torch.no_grad():
         input_tensor = tensorFromSentence(input_lang, sentence)
         input_length = input_tensor.size()[0]
@@ -190,7 +190,7 @@ def predict_table_from_model(
     input_lang,
     output_lang
 ):
-    sentence = preprocess(sentence)
+    sentence = ' '.join(preprocess(sentence))
     with torch.no_grad():
         input_tensor = tensorFromSentence(input_lang, sentence)
         y_pred =  encoder(input_tensor)

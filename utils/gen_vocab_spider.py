@@ -57,12 +57,21 @@ for INPUT_FILE in INPUT_FILES:
             if "join" in sql_tokens:
                 continue
             table=None
+            is_column = 0
             for i in range(0,len(sql_tokens)):
                 if sql_tokens[i] in table_props['table_names']:
                     relevant_tables[sql_tokens[i]] = True
                     table = sql_tokens[i]
                     sql_tokens_list.append(sql_literals['table'])
+                elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
+                    is_column+=1
                 else:
+                    if is_column > 1:
+                        sql_tokens_list.append('<cols>')
+                        is_column=0
+                    elif is_column == 1:
+                        sql_tokens_list.append('<col>')
+                        is_column=0
                     sql_tokens_list.append(sql_tokens[i])
             sentence = ' '.join(tokens)
             sql = ' '.join(sql_tokens_list)
