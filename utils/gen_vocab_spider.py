@@ -1,5 +1,4 @@
 import json
-import typing_extensions
 import spacy
 import sys
 import re
@@ -19,7 +18,7 @@ pairs=[]
 index=0
 
 #tokenization
-tok = spacy.load('en')
+tok = spacy.load('en_core_web_sm')
 def tokenize (text):
     regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]') # remove punctuation and numbers
     nopunct = regex.sub("", text.lower())
@@ -38,12 +37,6 @@ with open('/content/Sent2LogicalForm/data/tables.json') as file:
                 table_props['table_names'][table_name] = entry['db_id']
         else: table_props['table_names'] = {}
 
-sql_literals = {
-    'column' : '<attr>',
-    'alais' : '<al>',
-    'table' : '<table>'
-}
-
 relevant_tables = {}
 # Opening JSON file
 for INPUT_FILE in INPUT_FILES:
@@ -59,10 +52,10 @@ for INPUT_FILE in INPUT_FILES:
             table=None
             is_column = 0
             for i in range(0,len(sql_tokens)):
-                if sql_tokens[i] in table_props['table_names']:
-                    relevant_tables[sql_tokens[i]] = True
-                    table = sql_tokens[i]
-                    sql_tokens_list.append(sql_literals['table'])
+                if sql_tokens[i] == 'from':
+                    relevant_tables[sql_tokens[i+1]] = True
+                    table = sql_tokens[i+1]
+                    sql_tokens_list.append(sql_tokens[i+1])
                 elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
                     is_column+=1
                 else:

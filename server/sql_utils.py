@@ -7,7 +7,7 @@ import re
 import string
 import torch.nn.functional as F
 
-tok = spacy.load('en')
+tok = spacy.load('en_core_web_sm')
 SQL_FUNC_VOCAB = ['avg','count','first','last','sum','min','max','date','year','for','by']
 SOS_token = 0
 EOS_token = 1
@@ -57,18 +57,20 @@ def post_process_query(
     for index in range(0,len(query_tokens)):
         token = query_tokens[index]
         if token in SQL_FUNC_VOCAB: #agg function
-            refined_query += agg_token(query_tokens,index,table_props[db_id]['columns'])
-        elif token in table_props[db_id]['columns']: # attribute
-            refined_query += table_props[db_id]['columns'][token]
+            if db_id is not None:
+                refined_query += agg_token(query_tokens,index,table_props[db_id]['columns']) + " "
+            else : refined_query += agg_token(query_tokens,index,{}) + " "
+        elif db_id !=None and token in table_props[db_id]['columns']: # attribute
+            refined_query += table_props[db_id]['columns'][token] + " "
         elif token=="value":
             if value_index < len(value_table):
-                refined_query += value_token_column(value_table[value_index])
+                refined_query += value_token_column(value_table[value_index]) + " "
                 value_index+=1
         elif token=="<table>":
-            refined_query += table
+            refined_query += table + " "
         elif token==EOS_token:
             continue
-        else: refined_query+=query_tokens[index]
+        else: refined_query+=query_tokens[index] + " "
     return refined_query,db_id
 
 class Lang:
@@ -105,12 +107,14 @@ def normalizeString(s):
 def getLangs(lang_file):
     input_lang = Lang('english')
     output_lang = Lang('sql')
+    table_lang = Lang('table')
     lines = open(lang_file, encoding='utf-8').read().strip().split('\n')
     pairs = [[normalizeString(s) for s in l.split('   ')] for l in lines]
     for pair in pairs:
         input_lang.addSentence(pair[0])
         output_lang.addSentence(pair[1])
-    return input_lang, output_lang
+        table_lang.addSentence(pair[2])
+    return input_lang, output_lang,table_lang
     
 def indexesFromSentence(lang, sentence):
     result=[]
@@ -143,6 +147,7 @@ def get_sql_vocab(sql_vocab_file_path):
 def get_tables_info(table_file_path):
     with open(table_file_path) as file:
         table_props = json.load(file)
+        table_props['table_names']['<unk>'] = None
     return table_props
 
 def predict_query(

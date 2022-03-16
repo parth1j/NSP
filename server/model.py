@@ -52,7 +52,7 @@ class AttnDecoderRNN(nn.Module):
 
 class Table_Prediction_LSTM(nn.Module):
     def __init__(self, input_size, hidden_size):
-        super(EncoderRNN, self).__init__()
+        super(Table_Prediction_LSTM, self).__init__()
         self.hidden_size = hidden_size
         self.embedding = nn.Embedding(input_size, hidden_size)
         self.lstm = nn.LSTM(hidden_size, hidden_size,num_layers=1)

@@ -9,18 +9,18 @@ from flask_cors import CORS
 device="cpu"
 SOS_token = 0
 EOS_token = 1
-ENCODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\encoder (2).pth'
-DECODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\decoder (2).pth'
+ENCODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\encoder (1).pth'
+DECODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\decoder (1).pth'
 TABLE_PREDICTOR_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\table_pred.pth'
 LANG_FILE_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\train_spider.txt'
-TABLE_PROPS_FILE = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\tables_props.json'
+TABLE_PROPS_FILE = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\table_props.json'
 SQL_VOCAB_FILE = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\sql_vocab.txt'
 DB_FILES = r"C:\Users\admin\Desktop\Sent2LogicalForm\database"
 
 app = Flask(__name__)
 CORS(app=app)
 print("Generating vocab...")
-input_lang, output_lang = getLangs(LANG_FILE_PATH)
+input_lang, sql_output_lang,table_output_lang = getLangs(LANG_FILE_PATH)
 
 print("Generating models...")
 encoder,decoder,table_predictor = getSavedModels(
@@ -28,13 +28,13 @@ encoder,decoder,table_predictor = getSavedModels(
     DECODER_PATH,
     TABLE_PREDICTOR_PATH,
     input_lang,
-    output_lang,
+    sql_output_lang,
     device
 )
 
 print("Getting table info...")
 table_props = get_tables_info(TABLE_PROPS_FILE)
-dir_list = table_props.keys()
+dir_list = list(table_props.keys())
 dir_list.remove("table_names")
 db_files_dict = {}
 for dir in dir_list:
@@ -55,14 +55,14 @@ def get_yale_output():
         decoder,
         sentence,
         input_lang,
-        output_lang,
+        sql_output_lang,
         device
     )
     refined_query,db_id = post_process_query(
         output,
         table_predictor,
         input_lang,
-        output_lang,
+        table_output_lang,
         table_props
     )
     return {
