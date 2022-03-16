@@ -47,8 +47,6 @@ for INPUT_FILE in INPUT_FILES:
             tokens=tokenize(' '.join(list(entry['question_toks'])))
             sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
             sql_tokens_list = []
-            if "join" in sql_tokens:
-                continue
             table=None
             is_column = 0
             for i in range(0,len(sql_tokens)):
@@ -72,7 +70,9 @@ for INPUT_FILE in INPUT_FILES:
             print(sql)
             print(table)
             print("")
-            pairs.append((sentence,sql,table))
+            if "join" in sql_tokens:
+                pairs.append((sentence,table))
+            else: pairs.append((sentence,sql,table))
             index+=1
             if index==COUNT:
                 break
