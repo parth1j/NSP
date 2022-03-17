@@ -9,12 +9,14 @@ INPUT_FILES = [
     '/content/Sent2LogicalForm/data/train_others.json',
     '/content/Sent2LogicalForm/data/dev.json'
 ]
-OUTPUT_FILE = sys.argv[1]
-COUNT = int(sys.argv[2])
+OUTPUT_FILE = '/content/Sent2LogicalForm/data/train_spider.txt'
+TABLES_OUTPUT_FILE = '/content/Sent2LogicalForm/data/train_tables.txt'
+COUNT = int(sys.argv[1])
 PROPS_FILE = "/content/Sent2LogicalForm/data/table_props.json"
 
 table_props={}
-pairs=[]
+pairs_sent_sql=[]
+pairs_sent_table=[]
 index=0
 
 #tokenization
@@ -47,8 +49,6 @@ for INPUT_FILE in INPUT_FILES:
             tokens=tokenize(' '.join(list(entry['question_toks'])))
             sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
             sql_tokens_list = []
-            if "join" in sql_tokens:
-                continue
             table=None
             is_column = 0
             for i in range(0,len(sql_tokens)):
@@ -72,7 +72,9 @@ for INPUT_FILE in INPUT_FILES:
             print(sql)
             print(table)
             print("")
-            pairs.append((sentence,sql,table))
+            if "join" not in sql_tokens:
+                pairs_sent_sql.append((sentence,sql))
+            pairs_sent_table.append((sentence,table))
             index+=1
             if index==COUNT:
                 break
@@ -88,10 +90,14 @@ print(len(list(table_props['table_names'])))
 
 with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     train_file.truncate(0)
-    for pair in pairs:
+    for pair in pairs_sent_sql:
         text = pair[0] + "   " + pair[1]
-        if len(pair)==3:
-          text +=  "   " + pair[2]
+        train_file.write( text + "\n")
+
+with open(TABLES_OUTPUT_FILE,'w',encoding='utf-8') as train_file :
+    train_file.truncate(0)
+    for pair in pairs_sent_table:
+        text = pair[0] + "   " + pair[1]
         train_file.write( text + "\n")
 
 with open(PROPS_FILE,'w',encoding='utf-8') as json_file :

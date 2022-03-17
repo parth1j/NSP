@@ -152,8 +152,10 @@ def get_tables_info(table_file_path):
     with open(table_file_path) as file:
         table_props = json.load(file)
         table_props['table_names']['<unk>'] = None
-        for key in table_props['table_names']:
-            table_props['table_names'][key] = (table_props['table_names'][key],''.join(tokenize(key)))
+        keys = list(table_props['table_names'].keys())
+        table_props['table_names'] = {}
+        for key in keys:
+            table_props['table_names'][''.join(tokenize(key))] = (table_props['table_names'][key],key)
     return table_props
 
 def predict_query(
