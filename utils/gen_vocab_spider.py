@@ -55,7 +55,9 @@ for INPUT_FILE in INPUT_FILES:
                 if sql_tokens[i] == 'from':
                     relevant_tables[sql_tokens[i+1]] = True
                     table = sql_tokens[i+1]
-                    sql_tokens_list.append(sql_tokens[i+1])
+                    sql_tokens_list.append(sql_tokens[i])
+                elif sql_tokens[i] in relevant_tables:
+                    sql_tokens_list.append('<table>')
                 elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
                     is_column+=1
                 else:

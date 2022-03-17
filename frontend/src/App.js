@@ -4,6 +4,7 @@ import AceEditor from "react-ace";
 import axios from "axios";
 import "ace-builds/src-noconflict/mode-sql";
 import "ace-builds/src-noconflict/theme-github";
+import PostProcess from './postprocess';
 
 const styles = {
   turn :  {
@@ -28,7 +29,9 @@ const INITIAL_STATE = {
 
 function App() {
   const [state,setState] = React.useState(INITIAL_STATE)
+  const [outputProps,setoutputProps] = React.useState([])
   const [results,setResults] = React.useState([])
+  const [toggle,setToggle] = React.useState(false)
 
   const onSubmit= async ()=>{
     let inputs = state.inputText.split("\n")
@@ -42,12 +45,16 @@ function App() {
             "sentence" : input
           }
         )
+        console.log(response.data.columns)
         if(response.status!==200){
           throw new Error("Failed to fetch query")
         }
         outputs += response.data.output + "\n"
+        outputProps.push(response.data)
       }
+      setoutputProps(outputProps)
       onChangeOutput(outputs)
+      setToggle(true)
     } catch (error) {
       window.alert(error)
       console.error(error)
@@ -61,7 +68,8 @@ function App() {
           const response = await axios.post(
             'http://127.0.0.1:5000/execute',
             {
-              query : query
+              query : query,
+              db_id : outputProps[index].db_id
             }
           )
           if(response.status!==200){
@@ -132,13 +140,20 @@ function App() {
       </header>
       <div className='body'>
         <div className='txt'>
-          <textarea 
-            id="txtArea" 
-            rows="20" 
-            cols="70" 
-            draggable={false}
-            value={state.inputText}
-            onChange={onChangeInput}></textarea>
+          {
+            toggle===false ? (
+              <textarea 
+                id="txtArea" 
+                rows="20" 
+                cols="70" 
+                draggable={false}
+                value={state.inputText}
+                onChange={onChangeInput}></textarea>
+            ) : <PostProcess outputProps={outputProps} 
+                onChangeOutput={onChangeOutput} 
+                setToggle={setToggle} 
+                setoutputProps={setoutputProps}/>
+          }
           <div className='results'>
             <h4>Get Results for SQL queries</h4>
             <button className='button' id='exe' onClick={onExecute}>Execute</button>

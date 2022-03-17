@@ -51,12 +51,12 @@ class AttnDecoderRNN(nn.Module):
         return torch.zeros(1, 1, self.hidden_size, device=device)
 
 class Table_Prediction_LSTM(nn.Module):
-    def __init__(self, input_size, hidden_size,output_lang):
+    def __init__(self, input_size, hidden_size,num_classes):
         super(Table_Prediction_LSTM, self).__init__()
         self.hidden_size = hidden_size
         self.embedding = nn.Embedding(input_size, hidden_size)
         self.lstm = nn.LSTM(hidden_size, hidden_size,num_layers=1)
-        self.linear = nn.Linear(hidden_size,output_lang.n_words)
+        self.linear = nn.Linear(hidden_size,num_classes)
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, input):
@@ -66,11 +66,20 @@ class Table_Prediction_LSTM(nn.Module):
         return self.linear(hidden[-1])
 
 
-def getSavedModels(encoder_path,decoder_path,tp_path,input_lang,output_lang,device) :
+def getSavedModels(
+    encoder_path,
+    decoder_path,
+    tp_path,
+    input_lang_sql,
+    input_lang_table,
+    output_lang_sql,
+    output_lang_table,
+    device
+) :
     hidden_size = 256
-    encoder = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    attn_decoder = AttnDecoderRNN(hidden_size,output_lang.n_words, dropout_p=0.1).to(device)
-    table_predictor = Table_Prediction_LSTM(input_lang.n_words,hidden_size,output_lang).to(device)
+    encoder = EncoderRNN(input_lang_sql.n_words, hidden_size).to(device)
+    attn_decoder = AttnDecoderRNN(hidden_size,output_lang_sql.n_words, dropout_p=0.1).to(device)
+    table_predictor = Table_Prediction_LSTM(input_lang_table.n_words,hidden_size,output_lang_table.n_words).to(device)
     encoder.load_state_dict(torch.load(encoder_path,map_location=torch.device(device)))
     attn_decoder.load_state_dict(torch.load(decoder_path,map_location=torch.device(device)))
     table_predictor.load_state_dict(torch.load(tp_path,map_location=torch.device(device)))

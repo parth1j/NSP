@@ -2,6 +2,7 @@ import os
 from flask import request
 from flask import Flask
 from model import getSavedModels
+from sql_utils import predict_table_from_model
 from sql_utils import extract_value
 from sql_utils import get_tables_info, post_process_query,getLangs,predict_query
 from db import Database
@@ -21,15 +22,17 @@ DB_FILES = r"C:\Users\admin\Desktop\Sent2LogicalForm\database"
 app = Flask(__name__)
 CORS(app=app)
 print("Generating vocab...")
-input_lang, sql_output_lang,table_output_lang = getLangs(LANG_FILE_PATH)
+input_lang_sql, input_lang_table ,sql_output_lang,table_output_lang = getLangs(LANG_FILE_PATH)
 
 print("Generating models...")
 encoder,decoder,table_predictor = getSavedModels(
     ENCODER_PATH,
     DECODER_PATH,
     TABLE_PREDICTOR_PATH,
-    input_lang,
+    input_lang_sql,
+    input_lang_table,
     sql_output_lang,
+    table_output_lang,
     device
 )
 
@@ -55,15 +58,14 @@ def get_yale_output():
         encoder,
         decoder,
         sentence,
-        input_lang,
+        input_lang_sql,
         sql_output_lang,
         device
     )
+    table = predict_table_from_model(table_predictor,sentence,input_lang_table,table_output_lang)
     refined_query,db_id,columns = post_process_query(
         output,
-        table_predictor,
-        input_lang,
-        table_output_lang,
+        table,
         table_props,
         extract_value(sentence)
     )
