@@ -47,6 +47,8 @@ for INPUT_FILE in INPUT_FILES:
             tokens=tokenize(' '.join(list(entry['question_toks'])))
             sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
             sql_tokens_list = []
+            if "join" in sql_tokens:
+                continue
             table=None
             is_column = 0
             for i in range(0,len(sql_tokens)):
@@ -70,9 +72,7 @@ for INPUT_FILE in INPUT_FILES:
             print(sql)
             print(table)
             print("")
-            if "join" in sql_tokens:
-                pairs.append((sentence,table))
-            else: pairs.append((sentence,sql,table))
+            pairs.append((sentence,sql,table))
             index+=1
             if index==COUNT:
                 break
@@ -90,9 +90,8 @@ with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     train_file.truncate(0)
     for pair in pairs:
         text = pair[0] + "   " + pair[1]
-        if pair[2]!=None:
+        if len(pair)==3:
           text +=  "   " + pair[2]
-        else : text += "   " + "<UNK>"
         train_file.write( text + "\n")
 
 with open(PROPS_FILE,'w',encoding='utf-8') as json_file :

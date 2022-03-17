@@ -2,6 +2,7 @@ import os
 from flask import request
 from flask import Flask
 from model import getSavedModels
+from sql_utils import extract_value
 from sql_utils import get_tables_info, post_process_query,getLangs,predict_query
 from db import Database
 from flask_cors import CORS
@@ -58,16 +59,18 @@ def get_yale_output():
         sql_output_lang,
         device
     )
-    refined_query,db_id = post_process_query(
+    refined_query,db_id,columns = post_process_query(
         output,
         table_predictor,
         input_lang,
         table_output_lang,
-        table_props
+        table_props,
+        extract_value(sentence)
     )
     return {
         "output" : refined_query,
-        "db_id" : db_id
+        "db_id" : db_id,
+        "columns" : columns
     }
 
 @app.route("/tranx", methods=['GET', 'POST'])

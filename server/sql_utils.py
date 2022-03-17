@@ -1,4 +1,3 @@
-from curses.ascii import isalpha
 import unicodedata
 import json
 import spacy
@@ -20,12 +19,11 @@ def tokenize (text):
 
 def agg_token(
     query,
-    query_index,
-    column_dict
+    query_index
 ):
     agg = query[query_index]
-    if query[query_index+1] in column_dict:
-        return agg + '(' + column_dict[query[query_index+1]] +')' 
+    if query[query_index+1] =='<col>':
+        return agg + '(' + '<col>' +')' 
     return agg + '(*)'
 
 def column_token(
@@ -37,22 +35,26 @@ def column_token(
         return column_dict[query[query_index+1]] 
     return "<unk_col>"
 
-def value_token_column(value):
-    return f'= "{value}" '
+def value_token_column(value,pre_token):
+    return f'= "{value}" ' if pre_token!='limit' else value 
+
+def extract_value(sentence):
+    tokens = preprocess(sentence)
+    value_table=[]
+    value_table.append(token for token in tokens if tok(token)[0].pos_ in ['PRON','NUM'])
 
 def post_process_query(
     query,
     model,
     input_lang,
     output_lang,
-    table_props
+    table_props,
+    value_table
 ):
     refined_query = ""
     query_tokens = query.split(" ")
-    value_table=[]
-    value_table.append(token for token in query_tokens if isalpha(token)==False or '"' in token.split(""))
     table = predict_table_from_model(model,query,input_lang,output_lang)
-    db_id = table_props['table_names'][table]
+    db_id = table_props['table_names'][table][0]
     value_index=0
     for index in range(0,len(query_tokens)):
         token = query_tokens[index]
@@ -60,18 +62,16 @@ def post_process_query(
             if db_id is not None:
                 refined_query += agg_token(query_tokens,index,table_props[db_id]['columns']) + " "
             else : refined_query += agg_token(query_tokens,index,{}) + " "
-        elif db_id !=None and token in table_props[db_id]['columns']: # attribute
-            refined_query += table_props[db_id]['columns'][token] + " "
         elif token=="value":
             if value_index < len(value_table):
-                refined_query += value_token_column(value_table[value_index]) + " "
+                refined_query += value_token_column(value_table[value_index],query_tokens[index-1]) + " "
                 value_index+=1
         elif token=="<table>":
-            refined_query += table + " "
-        elif token==EOS_token:
+            refined_query += table_props['table_names'][table][1] + " "
+        elif token=='<EOS>':
             continue
         else: refined_query+=query_tokens[index] + " "
-    return refined_query,db_id
+    return refined_query,db_id,table_props[db_id]['columns']
 
 class Lang:
     def __init__(self, name):
@@ -105,15 +105,19 @@ def normalizeString(s):
     return s
 
 def getLangs(lang_file):
+    lang_file_2 = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\train_spider (3).txt'
     input_lang = Lang('english')
     output_lang = Lang('sql')
     table_lang = Lang('table')
     lines = open(lang_file, encoding='utf-8').read().strip().split('\n')
-    pairs = [[normalizeString(s) for s in l.split('   ')] for l in lines]
-    for pair in pairs:
+    pairs1 = [[normalizeString(s) for s in l.split('   ')] for l in lines]
+    lines = open(lang_file_2, encoding='utf-8').read().strip().split('\n')
+    pairs2 = [[normalizeString(s) for s in l.split('   ')] for l in lines]
+    for pair in pairs1:
         input_lang.addSentence(pair[0])
         output_lang.addSentence(pair[1])
-        table_lang.addSentence(pair[2])
+    for pair in pairs2:
+        table_lang.addSentence(pair[2] if len(pair)==3 else pair[1])
     return input_lang, output_lang,table_lang
     
 def indexesFromSentence(lang, sentence):
@@ -134,7 +138,7 @@ def tensorFromWord(lang,word):
     index = lang.word2index["UNK"]
   else:
     index = lang.word2index[word]
-  return torch.tensor(F.one_hot(torch.tensor([index]), num_classes=197),dtype=torch.float32)
+  return torch.tensor(F.one_hot(torch.tensor([index]), num_classes=lang.n_words),dtype=torch.float32)
 
 def get_sql_vocab(sql_vocab_file_path):
     sql_vocab={}
@@ -148,6 +152,8 @@ def get_tables_info(table_file_path):
     with open(table_file_path) as file:
         table_props = json.load(file)
         table_props['table_names']['<unk>'] = None
+        for key in table_props['table_names']:
+            table_props['table_names'][key] = (table_props['table_names'][key],''.join(tokenize(key)))
     return table_props
 
 def predict_query(
