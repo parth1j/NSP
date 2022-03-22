@@ -30,12 +30,13 @@ const INITIAL_STATE = {
 function App() {
   const [state,setState] = React.useState(INITIAL_STATE)
   const [outputProps,setoutputProps] = React.useState([])
-  const [results,setResults] = React.useState([])
   const [toggle,setToggle] = React.useState(false)
+  const [loading,setLoading] = React.useState(false)
 
   const onSubmit= async ()=>{
     let inputs = state.inputText.split("\n")
     let outputs = ""
+    setLoading(true)
     try {
       for(let i=0;i<inputs.length;i++){
         let input = inputs[i];
@@ -45,7 +46,6 @@ function App() {
             "sentence" : input
           }
         )
-        console.log(response.data.columns)
         if(response.status!==200){
           throw new Error("Failed to fetch query")
         }
@@ -54,14 +54,16 @@ function App() {
       }
       setoutputProps(outputProps)
       onChangeOutput(outputs)
-      setToggle(true)
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       window.alert(error)
       console.error(error)
     }
   }
 
   const onExecute=()=>{
+    setLoading(true)
     try {
       state.outputSql.split("\n").forEach(
         async (query,index)=>{
@@ -76,14 +78,14 @@ function App() {
           if(response.status!==200){
             throw new Error("Failed to fetch query")
           }
-          results.push({
-            id : `query(${index})`,
-            result : response.result
-          })
+          outputProps[index].result = response.data.result
         }
       )
-      setResults(results)
+      setoutputProps(outputProps)
+      setToggle(true)
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       window.alert(error)
       console.error(error)
     }
@@ -118,11 +120,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div><h3>TexttoSQL</h3></div>
-        <div className="commands">
-          <button className='button' id='clear' onClick={onClear}>Clear</button>
-          <button className='button' id='run' onClick={onSubmit}>Run</button>
-        </div>
+        <div><h3>TexttoSQL</h3></div>{
+          loading===true ? (
+            <h4>Constructing query...Please wait</h4>
+          ) : (
+            <div className="commands">
+              <button className='button' id='clear' onClick={onClear}>Clear</button>
+              <button className='button' id='run' onClick={onSubmit}>Run</button>
+            </div>
+          )
+        }
         <div style={styles.turn}>
           <div style={{
               backgroundColor : state.parser===1 ? 'grey' : 'blue',
@@ -136,12 +143,11 @@ function App() {
               color : 'white',
               padding : 10,
               fontSize : 20
-          }}onClick={()=>toggleHandler(1)}>Yale</div>
+          }} onClick={()=>toggleHandler(1)}>Yale</div>
         </div>
       </header>
       <div className='body'>
-        <div className='txt'>
-          {
+        <div className='txt'>{
             toggle===false ? (
               <textarea 
                 id="txtArea" 
@@ -150,15 +156,15 @@ function App() {
                 draggable={false}
                 value={state.inputText}
                 onChange={onChangeInput}></textarea>
-            ) : <PostProcess outputProps={outputProps} 
-                onChangeOutput={onChangeOutput} 
-                setToggle={setToggle} 
-                setoutputProps={setoutputProps}/>
+            ) : <PostProcess outputProps={outputProps} setToggle={setToggle} />
+          }{
+            toggle===true ? null : (
+              <div className='results'>
+                <h4>Get Results for SQL queries</h4>
+                <button className='button' id='exe' onClick={onExecute}>Execute</button>
+              </div>
+            )
           }
-          <div className='results'>
-            <h4>Get Results for SQL queries</h4>
-            <button className='button' id='exe' onClick={onExecute}>Execute</button>
-          </div>
         </div>
         <AceEditor
           mode="sql"

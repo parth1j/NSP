@@ -1,4 +1,3 @@
-from curses.ascii import isdigit
 import unicodedata
 import json
 import spacy
@@ -25,11 +24,11 @@ def agg_token(
     agg = query[query_index]
     if query[query_index+1] =='<col>':
         query[query_index+1]=''
-        return query,agg + '(' + '<col>' +')' 
+        return query,agg + '( ' + '<col>' +' )' 
     elif query[query_index+1]=='distinct':
         query[query_index+1]=''
         query[query_index+2]=''
-        return query,f'{agg}(distinct <col>)'
+        return query,f'{agg}(distinct <col> )'
     return query, agg + '(*)'
 
 def column_token(
@@ -48,10 +47,54 @@ def extract_value(sentence):
     tokens = preprocess(sentence)
     value_table=[]
     for token in tokens:
-        if tok(token)[0].pos_ in ['NUM']:
+        if tok(token)[0].pos_ in ['PROPN','NUM']:
             value_table.append(token)
-    print(value_table)
     return value_table
+
+import numpy as np
+
+def cosine(u, v):
+    return np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v))
+
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('bert-base-nli-mean-tokens')
+
+class ColumnsRanker:
+    def __init__(self) -> None:
+        self.max_sim  = -1
+        self.max_sim_query = ""
+
+    def get_final_query(self,sentence,query,columns,no_columns):
+        _dict = []
+        self.max_sim_query = query
+        sentence = ' '.join(preprocess(sentence))
+        self.rank_columns(sentence,query,columns,_dict,no_columns)
+        return self.max_sim_query
+        
+    def rank_columns(self,sentence,query,columns,_dict,no_columns):
+        if(no_columns==0):
+            return query
+        if query in _dict :
+            return query
+
+        _dict.append(query)
+        tokens = query.split(' ')
+        for index in range(0,len(tokens)):
+            if tokens[index]=='<col>':
+                for key in columns:
+                    tokens[index] = key
+                    query = self.rank_columns(sentence,' '.join(tokens),columns,_dict,no_columns-1)
+                    print(query)
+                    sentence_embeddings = model.encode([sentence])
+                    query_embeddings = model.encode([query])
+                    sim = cosine(query_embeddings[0],sentence_embeddings[0])
+                    print(sim)
+                    if sim > self.max_sim:
+                        self.max_sim = sim
+                        self.max_sim_query = query
+        
+        return query
+
 
 def post_process_query(
     query,
@@ -61,8 +104,6 @@ def post_process_query(
 ):
     refined_query = ""
     query_tokens = query.split(" ")
-    print(query)
-    print(table)
     value_index=0
     for index in range(0,len(query_tokens)):
         token = query_tokens[index]

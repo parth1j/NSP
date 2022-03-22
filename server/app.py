@@ -1,7 +1,7 @@
-import os
 from flask import request
 from flask import Flask
 from model import getSavedModels
+from sql_utils import ColumnsRanker
 from sql_utils import predict_table_from_model
 from sql_utils import extract_value
 from sql_utils import get_tables_info, post_process_query,getLangs,predict_query
@@ -62,10 +62,12 @@ def get_yale_output():
         table_props,
         extract_value(sentence)
     )
+    columns = Database().get_columns(table)
+    final_query = ColumnsRanker().get_final_query(sentence,refined_query,columns,len(columns))
+    
     return {
-        "output" : refined_query,
-        "table" : table,
-        "columns" : Database().get_columns(table)
+        "output" : final_query,
+        "table" : table
     }
 
 @app.route("/tranx", methods=['GET', 'POST'])
