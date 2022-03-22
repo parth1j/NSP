@@ -38,14 +38,7 @@ encoder,decoder,table_predictor = getSavedModels(
 
 print("Getting table info...")
 table_props = get_tables_info(TABLE_PROPS_FILE)
-dir_list = list(table_props.keys())
-dir_list.remove("table_names")
-db_files_dict = {}
-for dir in dir_list:
-    file_list = os.listdir(DB_FILES + "/" + dir)
-    for file in file_list:
-        if(file.endswith('.sqlite')):
-            db_files_dict[dir] = file 
+tables = Database().get_tables()
 
 @app.route("/")
 def hello_world():
@@ -63,7 +56,7 @@ def get_yale_output():
         device
     )
     table = predict_table_from_model(table_predictor,sentence,input_lang_table,table_output_lang)
-    refined_query,db_id,columns = post_process_query(
+    refined_query = post_process_query(
         output,
         table,
         table_props,
@@ -71,8 +64,8 @@ def get_yale_output():
     )
     return {
         "output" : refined_query,
-        "db_id" : db_id,
-        "columns" : columns
+        "table" : table,
+        "columns" : Database().get_columns(table)
     }
 
 @app.route("/tranx", methods=['GET', 'POST'])
@@ -84,9 +77,11 @@ def get_tranx_output():
 @app.route("/execute",methods=['POST'])
 def execute_query():
     query = request.json['query']
-    db_id =  request.json['db_id']
-    db_file = db_files_dict[db_id]
-    db = Database(db_file)
+    table =  request.json['table']
+    if table_props['table_names'][table][1] not in tables :
+        return {
+           "result" : "Table not present in db"
+        }
     return {
-        "result" : db.execute(query)
+        "result" : Database().execute(query)
     }

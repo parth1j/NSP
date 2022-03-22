@@ -13,6 +13,7 @@ function PostProcess({outputProps,onChangeOutput,setoutputProps,setToggle}) {
         setoutputProps(outputProps)
         onChangeOutput(result)
   }
+  
   const onChange = (value,index) =>{
     outputProps[index].output = value;
     let result = ""
@@ -54,7 +55,7 @@ function PostProcess({outputProps,onChangeOutput,setoutputProps,setToggle}) {
                             overflow : 'auto' 
                         }}>
                             {
-                                Object.keys(prop.columns).map(
+                                prop.columns.map(
                                     (column)=>(
                                         <div style={{
                                             color : 'white',
@@ -62,7 +63,7 @@ function PostProcess({outputProps,onChangeOutput,setoutputProps,setToggle}) {
                                             margin : 5,
                                             borderRadius : 10,
                                             backgroundColor : 'blue'
-                                        }} onClick={()=>onSelectColumn(prop.columns[column],index)}>
+                                        }} onClick={()=>onSelectColumn(column,index)}>
                                             <h6>{column}</h6>
                                         </div>
                                     )

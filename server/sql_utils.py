@@ -1,3 +1,4 @@
+from curses.ascii import isdigit
 import unicodedata
 import json
 import spacy
@@ -47,7 +48,7 @@ def extract_value(sentence):
     tokens = preprocess(sentence)
     value_table=[]
     for token in tokens:
-        if tok(token)[0].pos_ in ['PRON','NUM']:
+        if tok(token)[0].pos_ in ['NUM']:
             value_table.append(token)
     print(value_table)
     return value_table
@@ -62,7 +63,6 @@ def post_process_query(
     query_tokens = query.split(" ")
     print(query)
     print(table)
-    db_id = table_props['table_names'][table][0]
     value_index=0
     for index in range(0,len(query_tokens)):
         token = query_tokens[index]
@@ -81,7 +81,7 @@ def post_process_query(
         elif token=='<EOS>':
             continue
         else: refined_query+=query_tokens[index] + " "
-    return refined_query,db_id,table_props[db_id]['columns']
+    return refined_query
 
 class Lang:
     def __init__(self, name):

@@ -46,7 +46,16 @@ for INPUT_FILE in INPUT_FILES:
         data = json.load(json_file)
         for entry in data:
             print(index)
-            tokens=tokenize(' '.join(list(entry['question_toks'])))
+            tokens=tok(' '.join(tokenize(' '.join(list(entry['question_toks'])))))
+            tokens_list = []
+            for i in range(1,len(tokens)):
+                if tokens[i].pos_ == 'NOUN':
+                    tokens_list.append('<NOUN>')
+                elif tokens[i].pos_ == 'NUM':
+                    tokens_list.append('<NUM>')
+                elif tokens[i].pos_ == 'PROPN':
+                    tokens_list.append('<PROPN>')
+                else : tokens_list.append(tokens[i].lemma_)
             sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
             sql_tokens_list = []
             table=None

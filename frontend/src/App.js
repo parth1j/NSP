@@ -24,7 +24,7 @@ const URLS = {
 const INITIAL_STATE = {
   inputText : '',
   outputSql : '',
-  parser : 0
+  parser : 1
 }
 
 function App() {
@@ -69,9 +69,10 @@ function App() {
             'http://127.0.0.1:5000/execute',
             {
               query : query,
-              db_id : outputProps[index].db_id
+              table : outputProps[index].table
             }
           )
+          console.log(response.data)
           if(response.status!==200){
             throw new Error("Failed to fetch query")
           }
