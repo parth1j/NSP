@@ -1,18 +1,57 @@
-import json
+import mysql.connector
 
-INPUT_FILES = [
-    r'C:\Users\admin\Desktop\Sent2LogicalForm\data\train_spider.json',
-]
-tables={}
-count=0
-for INPUT_FILE in INPUT_FILES:
-    with open(INPUT_FILE) as json_file:
-        data = json.load(json_file)
-        for entry in data:
-            tables[entry['db_id']] = True
-            if count==100:
-                break
-            count+=1
+class Database:
+    def __init__(self):
+       self.mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            database="spider",
+            passwd="Msdian-77",
+            auth_plugin='mysql_native_password'
+        )
+
+    
+    def execute(self,query):
+        cur = self.mydb.cursor()
+        cur.execute(query)
+        rows = cur.fetchall()
+        return rows
+    
+    def get_columns(self,table):
+        cur = self.mydb.cursor()
+        try:
+            cur.execute("SHOW columns FROM " + table)
+            return [column[0] for column in cur.fetchall()]
+        except:
+            return []
+    
+    def get_tables(self):
+        cur = self.mydb.cursor()
+        cur.execute("SELECT table_name FROM information_schema.tables;")
+        return [x[0] for x in cur.fetchall()]
 
 
-print(list(tables.keys()))
+tables = Database().get_tables()
+query = "Who is oldest head of the department ?"
+
+
+import numpy as np
+
+def cosine(u, v):
+    return np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v))
+
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('bert-base-nli-mean-tokens')
+max_sim = -1
+max_sim_table = ""
+for table in tables:
+    sentence_embeddings = model.encode([table])
+    query_embeddings = model.encode([query])
+    sim = cosine(query_embeddings[0],sentence_embeddings[0])
+    print(table)
+    print(sim)
+    if sim > max_sim:
+        max_sim = sim
+        max_sim_table = table
+
+print(max_sim_table)

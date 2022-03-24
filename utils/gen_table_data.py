@@ -9,7 +9,7 @@ INPUT_FILES = [
     '/content/Sent2LogicalForm/data/train_others.json',
     '/content/Sent2LogicalForm/data/dev.json'
 ]
-OUTPUT_FILE = '/content/Sent2LogicalForm/data/train_spider.txt'
+
 TABLES_OUTPUT_FILE = '/content/Sent2LogicalForm/data/train_tables.txt'
 COUNT = int(sys.argv[1])
 PROPS_FILE = "/content/Sent2LogicalForm/data/table_props.json"
@@ -49,49 +49,35 @@ for INPUT_FILE in INPUT_FILES:
         for entry in data:
             print(index)
             tokens=nlp(' '.join(tokenize(' '.join(list(entry['question_toks'])))))
-            tokens_list = [tokens[0]]
-            for i in range(1,len(tokens)):
-                if tokens[i].pos_ == 'NOUN':
-                    tokens_list.append('<NOUN>')
-                elif tokens[i].pos_ == 'NUM':
-                    tokens_list.append('<NUM>')
-                else : tokens_list.append(tokens[i].lemma_)
             sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
-            if "join"  in sql_tokens:
-                continue
-            sql_tokens_list = [sql_tokens[0]]
             table=None
             is_column = 0
-            for i in range(1,len(sql_tokens)):
+            for i in range(0,len(sql_tokens)):
                 if sql_tokens[i] == 'from':
                     relevant_tables[sql_tokens[i+1]] = True
-                    sql_tokens_list.append(sql_tokens[i])
-                elif sql_tokens[i] in relevant_tables:
-                    sql_tokens_list.append('<table>')
-                elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
-                    is_column+=1
-                else:
-                    if is_column > 1:
-                        sql_tokens_list.append('<cols>')
-                        is_column=0
-                    elif is_column == 1:
-                        sql_tokens_list.append('<col>')
-                        is_column=0
-                    sql_tokens_list.append(sql_tokens[i])
-            sentence = ' '.join(tokens_list)
-            sql = ' '.join(sql_tokens_list)
+                    table = sql_tokens[i+1]
+                    break
+            sentence = ' '.join(tokens)
             print(sentence)
-            print(sql)
+            print(table)
             print("")
+            pairs_sent_table.append((sentence,table))
             index+=1
             if index==COUNT:
                 break
     if index==COUNT:
         break
 
-with open(OUTPUT_FILE,'w',encoding='utf-8') as train_file :
+temp = table_props['table_names']
+for key in list(temp):
+    if key not in relevant_tables:
+        del table_props['table_names'][key]
+
+print(len(list(table_props['table_names'])))
+
+with open(TABLES_OUTPUT_FILE,'w',encoding='utf-8') as train_file :
     train_file.truncate(0)
-    for pair in pairs_sent_sql:
+    for pair in pairs_sent_table:
         text = pair[0] + "   " + pair[1]
         train_file.write( text + "\n")
 
