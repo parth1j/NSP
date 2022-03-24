@@ -21,7 +21,7 @@ index=0
 
 #tokenization
 nlp = spacy.load('en_core_web_sm')
-nlp.add_pipe('merge_noun_chunks')
+
 
 def tokenize (text):
     regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]') # remove punctuation and numbers
@@ -49,37 +49,33 @@ for INPUT_FILE in INPUT_FILES:
         for entry in data:
             print(index)
             tokens=nlp(' '.join(tokenize(' '.join(list(entry['question_toks'])))))
-            tokens_list = [tokens[0]]
+            tokens_list = [tokens[0].lemma_]
             for i in range(1,len(tokens)):
                 if tokens[i].pos_ == 'NOUN':
                     tokens_list.append('<NOUN>')
                 elif tokens[i].pos_ == 'NUM':
                     tokens_list.append('<NUM>')
-                else : tokens_list.append(tokens[i].lemma_)
+                else : tokens_list.append(str(tokens[i].lemma_))
             sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
             if "join"  in sql_tokens:
                 continue
             sql_tokens_list = [sql_tokens[0]]
             table=None
-            is_column = 0
+            is_table = 0
             for i in range(1,len(sql_tokens)):
-                if sql_tokens[i] == 'from':
-                    relevant_tables[sql_tokens[i+1]] = True
+                if sql_tokens[i] =='from':
                     sql_tokens_list.append(sql_tokens[i])
-                elif sql_tokens[i] in relevant_tables:
-                    sql_tokens_list.append('<table>')
+                    is_table=1
+                elif is_table==1:
+                  sql_tokens_list.append('<table>')
+                  is_table=0
                 elif sql_tokens[i] in table_props[entry['db_id']]['columns']:
-                    is_column+=1
+                  sql_tokens_list.append('<col>')
                 else:
-                    if is_column > 1:
-                        sql_tokens_list.append('<cols>')
-                        is_column=0
-                    elif is_column == 1:
-                        sql_tokens_list.append('<col>')
-                        is_column=0
-                    sql_tokens_list.append(sql_tokens[i])
+                  sql_tokens_list.append(sql_tokens[i])
             sentence = ' '.join(tokens_list)
             sql = ' '.join(sql_tokens_list)
+            pairs_sent_sql.append((sentence,sql))
             print(sentence)
             print(sql)
             print("")
