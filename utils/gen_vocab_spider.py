@@ -51,10 +51,8 @@ for INPUT_FILE in INPUT_FILES:
             tokens=nlp(' '.join(tokenize(' '.join(list(entry['question_toks'])))))
             tokens_list = [tokens[0].lemma_]
             for i in range(1,len(tokens)):
-                if tokens[i].pos_ == 'NOUN':
-                    tokens_list.append('<NOUN>')
-                elif tokens[i].pos_ == 'NUM':
-                    tokens_list.append('<NUM>')
+                if tokens[i].pos_ == 'NUM':
+                    tokens_list.append('value')
                 else : tokens_list.append(str(tokens[i].lemma_))
             sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
             if "join"  in sql_tokens:

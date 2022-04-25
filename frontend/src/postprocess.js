@@ -2,7 +2,6 @@ import React from 'react'
 import './App.css';
 
 function PostProcess({outputProps,setToggle}) {
-  
   return (
     <div>
         <div style={{
@@ -30,8 +29,8 @@ function PostProcess({outputProps,setToggle}) {
                             value={prop.output} 
                             disabled
                         /></p>
-                        <div>
-                            {JSON.stringify(prop.result)}
+                        <div style={{textAlign:'center'}}>
+                            <p>{prop.result}</p>
                         </div>
                     </div>
                 )

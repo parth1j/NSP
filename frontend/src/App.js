@@ -50,7 +50,10 @@ function App() {
           throw new Error("Failed to fetch query")
         }
         outputs += response.data.output + "\n"
-        outputProps.push(response.data)
+        outputProps.push({
+          ...response.data,
+          output : response.data.output
+        })
       }
       setoutputProps(outputProps)
       onChangeOutput(outputs)
@@ -78,10 +81,10 @@ function App() {
           if(response.status!==200){
             throw new Error("Failed to fetch query")
           }
-          outputProps[index].result = response.data.result
+          outputProps[index].result = JSON.stringify(response.data.result)
         }
       )
-      setoutputProps(outputProps)
+      setoutputProps([...outputProps])
       setToggle(true)
       setLoading(false)
     } catch (error) {
@@ -92,13 +95,6 @@ function App() {
   }
 
   const onClear=()=>setState(INITIAL_STATE)
-
-  const toggleHandler = (option)=>setState(
-    prevState=>({
-      ...prevState,
-      parser : option
-    })
-  )
 
   const onChangeOutput=(value)=>{
     setState(
@@ -132,18 +128,12 @@ function App() {
         }
         <div style={styles.turn}>
           <div style={{
-              backgroundColor : state.parser===1 ? 'grey' : 'blue',
-              width : '100%',
-              padding : 10,
-              fontSize:20
-          }} onClick={()=>toggleHandler(0)}>Tranx</div>
-          <div style={{
               backgroundColor : state.parser===0 ? 'grey' : 'blue',
               width : '100%',
               color : 'white',
               padding : 10,
               fontSize : 20
-          }} onClick={()=>toggleHandler(1)}>Yale</div>
+          }}>Beta</div>
         </div>
       </header>
       <div className='body'>
@@ -153,7 +143,6 @@ function App() {
                 id="txtArea" 
                 rows="20" 
                 cols="70" 
-                draggable={false}
                 value={state.inputText}
                 onChange={onChangeInput}></textarea>
             ) : <PostProcess outputProps={outputProps} setToggle={setToggle} />

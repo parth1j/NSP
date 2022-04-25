@@ -87,5 +87,3 @@ def execute_query():
     return {
         "result" : Database().execute(query)
     }
- #try query predictor with preprocessed sentence
- #table prediction by cosine sim

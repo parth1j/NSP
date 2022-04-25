@@ -44,7 +44,7 @@ def value_token_column(value,pre_token):
     return f'= "{value}" ' if pre_token!='limit' else value 
 
 def extract_value(sentence):
-    tokens = preprocess(sentence)
+    tokens = tokenize(sentence)
     value_table=[]
     for token in tokens:
         if tok(token)[0].pos_ in ['PROPN','NUM']:
@@ -65,33 +65,32 @@ class ColumnsRanker:
         self.max_sim_query = ""
 
     def get_final_query(self,sentence,query,columns,no_columns):
-        _dict = []
+        _dict = {}
         self.max_sim_query = query
-        sentence = ' '.join(preprocess(sentence))
+        sentence = ' '.join(tokenize(sentence))
         self.rank_columns(sentence,query,columns,_dict,no_columns)
         return self.max_sim_query
         
     def rank_columns(self,sentence,query,columns,_dict,no_columns):
         if(no_columns==0):
             return query
-        if query in _dict :
-            return query
-
-        _dict.append(query)
         tokens = query.split(' ')
         for index in range(0,len(tokens)):
             if tokens[index]=='<col>':
                 for key in columns:
-                    tokens[index] = key
-                    query = self.rank_columns(sentence,' '.join(tokens),columns,_dict,no_columns-1)
-                    print(query)
-                    sentence_embeddings = model.encode([sentence])
-                    query_embeddings = model.encode([query])
-                    sim = cosine(query_embeddings[0],sentence_embeddings[0])
-                    print(sim)
-                    if sim > self.max_sim:
-                        self.max_sim = sim
-                        self.max_sim_query = query
+                    if key not in _dict:
+                        tokens[index] = key
+                        _dict[key] = True
+                        query = self.rank_columns(sentence,' '.join(tokens),columns,_dict,no_columns-1)
+                        print(query)
+                        sentence_embeddings = model.encode([sentence])
+                        query_embeddings = model.encode([' '.join(tokenize(query))])
+                        sim = cosine(query_embeddings[0],sentence_embeddings[0])
+                        print(sim)
+                        _dict[key] = False
+                        if sim > self.max_sim:
+                            self.max_sim = sim
+                            self.max_sim_query = query
         
         return query
 
@@ -221,7 +220,7 @@ def predict_query(
     device,
     max_length=5000
 ):
-    sentence = ' '.join(preprocess(sentence))
+    sentence = ' '.join(tokenize(sentence))
     with torch.no_grad():
         input_tensor = tensorFromSentence(input_lang, sentence)
         input_length = input_tensor.size()[0]
@@ -257,11 +256,18 @@ def predict_table_from_model(
     input_lang,
     output_lang
 ):
-    sentence = ' '.join(preprocess(sentence))
+    sentence = ' '.join(tokenize(sentence))
     with torch.no_grad():
         input_tensor = tensorFromSentence(input_lang, sentence)
         y_pred =  encoder(input_tensor)
         return output_lang.index2word[int(torch.argmax(y_pred))]
 
 def preprocess(sentence):
-  return tokenize(sentence)
+    tokens = tok(' '.join(tokenize(sentence)))
+    tokens_list = [tokens[0].lemma_]
+    for i in range(1,len(tokens)):
+        if tokens[i].pos_ == 'NUM':
+            tokens_list.append('value')
+        else : tokens_list.append(str(tokens[i].lemma_))
+    sentence = ' '.join(tokens_list)
+    return sentence
