@@ -3,7 +3,6 @@ import json
 import spacy
 import torch
 import re
-import string
 import torch.nn.functional as F
 
 tok = spacy.load('en_core_web_sm')
@@ -12,7 +11,7 @@ SOS_token = 0
 EOS_token = 1
 
 def tokenize (text):
-    regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]') 
+    regex = re.compile('[' + re.escape('"#$%()&\'+,-./:;@[\]^_`{|}~') + 'r\\t\\n]') # remove punctuation and numbers
     nopunct = regex.sub("", text.lower())
     nopunct = re.sub(' +', ' ', nopunct)
     return [token.text for token in tok.tokenizer(nopunct)]
@@ -24,73 +23,48 @@ def agg_token(
     agg = query[query_index]
     if query[query_index+1] =='<col>':
         query[query_index+1]=''
-        return query,agg + '( ' + '<col>' +' )' 
+        return query,agg + '( ' + '<col>' +' ),' 
     elif query[query_index+1]=='distinct':
         query[query_index+1]=''
         query[query_index+2]=''
-        return query,f'{agg}(distinct <col> )'
+        return query,f'{agg}(distinct <col> ),'
     return query, agg + '(*)'
-
-def column_token(
-    query,
-    query_index,
-    column_dict
-):
-    if query[query_index+1] in column_dict:
-        return column_dict[query[query_index+1]] 
-    return "<unk_col>"
-
-def value_token_column(value,pre_token):
-    return f'= "{value}" ' if pre_token!='limit' else value 
-
-def extract_value(sentence):
-    tokens = tokenize(sentence)
-    value_table=[]
-    for token in tokens:
-        if tok(token)[0].pos_ in ['PROPN','NUM']:
-            value_table.append(token)
-    return value_table
 
 import numpy as np
 
 def cosine(u, v):
     return np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v))
 
-from sentence_transformers import SentenceTransformer
-model = SentenceTransformer('bert-base-nli-mean-tokens')
-
 class ColumnsRanker:
-    def __init__(self) -> None:
+    def __init__(self,inputLang,outputLang) -> None:
         self.max_sim  = -1
         self.max_sim_query = ""
+        self.inputLang = inputLang
+        self.outputLang = outputLang
 
     def get_final_query(self,sentence,query,columns,no_columns):
-        _dict = {}
         self.max_sim_query = query
         sentence = ' '.join(tokenize(sentence))
-        self.rank_columns(sentence,query,columns,_dict,no_columns)
+        self.rank_columns(sentence,query,columns,no_columns)
         return self.max_sim_query
         
-    def rank_columns(self,sentence,query,columns,_dict,no_columns):
+    def rank_columns(self,sentence,query,columns,no_columns):
         if(no_columns==0):
             return query
         tokens = query.split(' ')
         for index in range(0,len(tokens)):
             if tokens[index]=='<col>':
                 for key in columns:
-                    if key not in _dict:
-                        tokens[index] = key
-                        _dict[key] = True
-                        query = self.rank_columns(sentence,' '.join(tokens),columns,_dict,no_columns-1)
-                        print(query)
-                        sentence_embeddings = model.encode([sentence])
-                        query_embeddings = model.encode([' '.join(tokenize(query))])
-                        sim = cosine(query_embeddings[0],sentence_embeddings[0])
-                        print(sim)
-                        _dict[key] = False
-                        if sim > self.max_sim:
-                            self.max_sim = sim
-                            self.max_sim_query = query
+                    tokens[index] = key
+                    query = self.rank_columns(sentence,' '.join(tokens),columns,no_columns-1)
+                    print(query)
+                    sentence_embeddings = tensorFromSentence(self.inputLang,sentence)
+                    query_embeddings = tensorFromSentence(self.outputLang,[' '.join(tokenize(query))])
+                    sim = cosine(query_embeddings[0],sentence_embeddings[0])
+                    print(sim)
+                    if sim > self.max_sim:
+                        self.max_sim = sim
+                        self.max_sim_query = query
         
         return query
 
@@ -98,26 +72,20 @@ class ColumnsRanker:
 def post_process_query(
     query,
     table,
-    table_props,
-    value_table
+    table_props
 ):
     refined_query = ""
     query_tokens = query.split(" ")
-    value_index=0
     for index in range(0,len(query_tokens)):
         token = query_tokens[index]
         if token in SQL_FUNC_VOCAB: #agg function
             tokens,token = agg_token(query_tokens,index)
             refined_query += token + " "
             query_tokens = tokens
-        elif token=="value":
-            if value_index < len(value_table):
-                refined_query += value_token_column(value_table[value_index],query_tokens[index-1]) + " "
-                value_index+=1
         elif token=="<table>":
-            refined_query += table_props['table_names'][table][1] + " "
+            refined_query += table_props['table_names'][table] + " "
         elif token in table_props['table_names'] :
-            refined_query += table_props['table_names'][token][1] + " "
+            refined_query += table_props['table_names'][token] + " "
         elif token=='<EOS>':
             continue
         else: refined_query+=query_tokens[index] + " "
@@ -192,23 +160,10 @@ def tensorFromWord(lang,word):
     index = lang.word2index[word]
   return torch.tensor(F.one_hot(torch.tensor([index]), num_classes=lang.n_words),dtype=torch.float32)
 
-def get_sql_vocab(sql_vocab_file_path):
-    sql_vocab={}
-    with open(sql_vocab_file_path) as vocab_file:
-        tokens = vocab_file.readlines()
-        for token in tokens:
-            sql_vocab[token.lower()] = True
-    return sql_vocab
-
 def get_tables_info(table_file_path):
     with open(table_file_path) as file:
         table_props = json.load(file)
         table_props['table_names']['<unk>'] = None
-        keys = list(table_props['table_names'].keys())
-        temp = table_props['table_names']
-        table_props['table_names'] = {}
-        for key in keys:
-            table_props['table_names'][''.join(tokenize(key))] = (temp[key],key)
     return table_props
 
 def predict_query(
@@ -263,11 +218,4 @@ def predict_table_from_model(
         return output_lang.index2word[int(torch.argmax(y_pred))]
 
 def preprocess(sentence):
-    tokens = tok(' '.join(tokenize(sentence)))
-    tokens_list = [tokens[0].lemma_]
-    for i in range(1,len(tokens)):
-        if tokens[i].pos_ == 'NUM':
-            tokens_list.append('value')
-        else : tokens_list.append(str(tokens[i].lemma_))
-    sentence = ' '.join(tokens_list)
-    return sentence
+    return ' '.join(tokenize(sentence))

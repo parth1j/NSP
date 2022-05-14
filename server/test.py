@@ -1,4 +1,4 @@
-import nltk
+'''import nltk
 nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 import numpy as np
@@ -30,3 +30,13 @@ query_vec = model.encode([query])[0]
 for sent in sentences:
   sim = cosine(query_vec, model.encode([sent])[0])
   print("Sentence = ", sent, "; similarity = ", sim)
+'''
+
+from db import Database
+
+
+tables = Database().get_tables()
+columns={}
+for table in tables:
+    columns[table] = Database().get_columns(table)
+print(columns)

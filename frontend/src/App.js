@@ -1,9 +1,6 @@
 import React from 'react'
 import './App.css';
-import AceEditor from "react-ace";
 import axios from "axios";
-import "ace-builds/src-noconflict/mode-sql";
-import "ace-builds/src-noconflict/theme-github";
 import PostProcess from './postprocess';
 
 const styles = {
@@ -30,10 +27,10 @@ const INITIAL_STATE = {
 function App() {
   const [state,setState] = React.useState(INITIAL_STATE)
   const [outputProps,setoutputProps] = React.useState([])
-  const [toggle,setToggle] = React.useState(false)
   const [loading,setLoading] = React.useState(false)
 
   const onSubmit= async ()=>{
+    setoutputProps([])
     let inputs = state.inputText.split("\n")
     let outputs = ""
     setLoading(true)
@@ -52,6 +49,7 @@ function App() {
         outputs += response.data.output + "\n"
         outputProps.push({
           ...response.data,
+          input : inputs[i],
           output : response.data.output
         })
       }
@@ -65,42 +63,17 @@ function App() {
     }
   }
 
-  const onExecute=()=>{
-    setLoading(true)
-    try {
-      state.outputSql.split("\n").forEach(
-        async (query,index)=>{
-          const response = await axios.post(
-            'http://127.0.0.1:5000/execute',
-            {
-              query : query,
-              table : outputProps[index].table
-            }
-          )
-          console.log(response.data)
-          if(response.status!==200){
-            throw new Error("Failed to fetch query")
-          }
-          outputProps[index].result = JSON.stringify(response.data.result)
-        }
-      )
-      setoutputProps([...outputProps])
-      setToggle(true)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      window.alert(error)
-      console.error(error)
-    }
-  }
 
-  const onClear=()=>setState(INITIAL_STATE)
+  const onClear=()=>{
+    setState(INITIAL_STATE)
+    setoutputProps([])
+  }
 
   const onChangeOutput=(value)=>{
     setState(
       prevState=>({
         ...prevState,
-        outputSql :value
+        outputSql :value 
       })
     )
   }
@@ -133,36 +106,28 @@ function App() {
               color : 'white',
               padding : 10,
               fontSize : 20
-          }}>Beta</div>
+          }}>Logout</div>
         </div>
       </header>
       <div className='body'>
-        <div className='txt'>{
-            toggle===false ? (
-              <textarea 
-                id="txtArea" 
-                rows="20" 
-                cols="70" 
-                value={state.inputText}
-                onChange={onChangeInput}></textarea>
-            ) : <PostProcess outputProps={outputProps} setToggle={setToggle} />
-          }{
-            toggle===true ? null : (
-              <div className='results'>
-                <h4>Get Results for SQL queries</h4>
-                <button className='button' id='exe' onClick={onExecute}>Execute</button>
-              </div>
-            )
-          }
+        <div className='txt'>
+          <textarea 
+            id="txtArea" 
+            rows="30" 
+            cols="70" 
+            value={state.inputText}
+            onChange={onChangeInput}/>
         </div>
-        <AceEditor
-          mode="sql"
-          theme="github"
-          value={state.outputSql}
-          onChange={onChangeOutput}
-          name="UNIQUE_ID_OF_DIV"
-          editorProps={{ $blockScrolling: true }}
-        />
+       <div>
+       {
+          outputProps.length===0 ? 
+          <div>
+            <p style={{color:'white'}}>Type some query in english assertive or interrogative form.</p>
+          </div>
+          :
+          <PostProcess outputProps={outputProps} setoutputProps={setoutputProps}/>
+        }
+       </div>
       </div>
     </div>
   );

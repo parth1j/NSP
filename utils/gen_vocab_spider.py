@@ -24,7 +24,7 @@ nlp = spacy.load('en_core_web_sm')
 
 
 def tokenize (text):
-    regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]') # remove punctuation and numbers
+    regex = re.compile('[' + re.escape('"#$%&()\'+,-./:;@[\]^_`{|}~') + 'r\\t\\n]') # remove punctuation and numbers
     nopunct = regex.sub("", text.lower())
     nopunct = re.sub(' +', ' ', nopunct)
     return [token.text for token in nlp.tokenizer(nopunct)]

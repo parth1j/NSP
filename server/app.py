@@ -11,8 +11,8 @@ from flask_cors import CORS
 device="cpu"
 SOS_token = 0
 EOS_token = 1
-ENCODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\encoder (1).pth'
-DECODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\decoder (1).pth'
+ENCODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\encoder.pth'
+DECODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\decoder.pth'
 TABLE_PREDICTOR_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\table_pred.pth'
 LANG_FILE_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\train_spider.txt'
 TABLE_PROPS_FILE = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\table_props.json'
@@ -55,15 +55,19 @@ def get_yale_output():
         sql_output_lang,
         device
     )
+    print(output)
     table = predict_table_from_model(table_predictor,sentence,input_lang_table,table_output_lang)
+    print(table)
     refined_query = post_process_query(
         output,
         table,
-        table_props,
-        extract_value(sentence)
+        table_props
     )
+    print(refined_query)
     columns = Database().get_columns(table)
-    final_query = ColumnsRanker().get_final_query(sentence,refined_query,columns,len(columns))
+    print(columns)
+    final_query = ColumnsRanker(input_lang_sql,sql_output_lang).get_final_query(sentence,refined_query,columns,len(columns))
+    print(final_query)
     
     return {
         "output" : final_query,
@@ -80,7 +84,8 @@ def get_tranx_output():
 def execute_query():
     query = request.json['query']
     table =  request.json['table']
-    if table_props['table_names'][table][1] not in tables :
+    print(table_props['table_names'][table])
+    if table_props['table_names'][table] not in tables :
         return {
            "result" : "Table not present in db"
         }
