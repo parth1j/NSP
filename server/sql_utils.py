@@ -30,44 +30,6 @@ def agg_token(
         return query,f'{agg}(distinct <col> ),'
     return query, agg + '(*)'
 
-import numpy as np
-
-def cosine(u, v):
-    return np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v))
-
-class ColumnsRanker:
-    def __init__(self,inputLang,outputLang) -> None:
-        self.max_sim  = -1
-        self.max_sim_query = ""
-        self.inputLang = inputLang
-        self.outputLang = outputLang
-
-    def get_final_query(self,sentence,query,columns,no_columns):
-        self.max_sim_query = query
-        sentence = ' '.join(tokenize(sentence))
-        self.rank_columns(sentence,query,columns,no_columns)
-        return self.max_sim_query
-        
-    def rank_columns(self,sentence,query,columns,no_columns):
-        if(no_columns==0):
-            return query
-        tokens = query.split(' ')
-        for index in range(0,len(tokens)):
-            if tokens[index]=='<col>':
-                for key in columns:
-                    tokens[index] = key
-                    query = self.rank_columns(sentence,' '.join(tokens),columns,no_columns-1)
-                    print(query)
-                    sentence_embeddings = tensorFromSentence(self.inputLang,sentence)
-                    query_embeddings = tensorFromSentence(self.outputLang,[' '.join(tokenize(query))])
-                    sim = cosine(query_embeddings[0],sentence_embeddings[0])
-                    print(sim)
-                    if sim > self.max_sim:
-                        self.max_sim = sim
-                        self.max_sim_query = query
-        
-        return query
-
 
 def post_process_query(
     query,
@@ -75,6 +37,7 @@ def post_process_query(
     table_props
 ):
     refined_query = ""
+    query = re.sub('<table>+','<table>',query)
     query_tokens = query.split(" ")
     for index in range(0,len(query_tokens)):
         token = query_tokens[index]
@@ -83,7 +46,7 @@ def post_process_query(
             refined_query += token + " "
             query_tokens = tokens
         elif token=="<table>":
-            refined_query += table_props['table_names'][table] + " "
+            refined_query += table + " "
         elif token in table_props['table_names'] :
             refined_query += table_props['table_names'][token] + " "
         elif token=='<EOS>':
@@ -205,17 +168,19 @@ def predict_query(
             decoder_input = topi.squeeze().detach()
         return ' '.join(decoded_words)
 
+from db import columns
 def predict_table_from_model(
     encoder,
     sentence,
     input_lang,
     output_lang
 ):
-    sentence = ' '.join(tokenize(sentence))
-    with torch.no_grad():
-        input_tensor = tensorFromSentence(input_lang, sentence)
-        y_pred =  encoder(input_tensor)
-        return output_lang.index2word[int(torch.argmax(y_pred))]
+    sentence = sentence.split(' ')
+    print(sentence)
+    for table in list(columns.keys()):
+        if table.lower() in sentence:
+            return table
+    return '<table>'
 
 def preprocess(sentence):
     return ' '.join(tokenize(sentence))

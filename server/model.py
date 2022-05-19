@@ -63,7 +63,7 @@ class Table_Prediction_LSTM(nn.Module):
         embedded = self.embedding(input)
         output = embedded
         output, (hidden,context) = self.lstm(output)
-        return self.linear(hidden[-1])
+        return F.relu(self.linear(hidden[-1]))
 
 
 def getSavedModels(

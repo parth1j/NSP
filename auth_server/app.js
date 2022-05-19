@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
@@ -11,6 +12,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(express.json());
+app.use(morgan('combined'))
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
@@ -20,7 +22,6 @@ app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  console.log(req)
   next(createError(404));
 });
 

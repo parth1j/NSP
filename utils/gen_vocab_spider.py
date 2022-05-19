@@ -24,7 +24,7 @@ nlp = spacy.load('en_core_web_sm')
 
 
 def tokenize (text):
-    regex = re.compile('[' + re.escape('"#$%&()\'+,-./:;@[\]^_`{|}~') + 'r\\t\\n]') # remove punctuation and numbers
+    regex = re.compile('[' + re.escape('"#$%&()\'+,-./:;@[\]^_`{|}~') + '\\r\\t\\n]') # remove punctuation and numbers
     nopunct = regex.sub("", text.lower())
     nopunct = re.sub(' +', ' ', nopunct)
     return [token.text for token in nlp.tokenizer(nopunct)]
@@ -48,14 +48,10 @@ for INPUT_FILE in INPUT_FILES:
         data = json.load(json_file)
         for entry in data:
             print(index)
-            tokens=nlp(' '.join(tokenize(' '.join(list(entry['question_toks'])))))
-            tokens_list = [tokens[0].lemma_]
-            for i in range(1,len(tokens)):
-                if tokens[i].pos_ == 'NUM':
-                    tokens_list.append('value')
-                else : tokens_list.append(str(tokens[i].lemma_))
-            sql_tokens = tokenize(' '.join(list(entry['query_toks_no_value'])))
-            if "join"  in sql_tokens:
+            tokens_list = tokenize(' '.join(list(entry['question_toks'])))
+            sql_tokens = tokenize(' '.join(list(entry['query_toks'])))
+            count  = sql_tokens.count('select')
+            if "join"  in sql_tokens or count > 1:
                 continue
             sql_tokens_list = [sql_tokens[0]]
             table=None

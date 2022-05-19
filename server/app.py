@@ -1,19 +1,19 @@
 from flask import request
 from flask import Flask
 from model import getSavedModels
-from sql_utils import ColumnsRanker
+from ranker import Ranker,get_values
 from sql_utils import predict_table_from_model
-from sql_utils import extract_value
 from sql_utils import get_tables_info, post_process_query,getLangs,predict_query
 from db import Database
 from flask_cors import CORS
+import re
 
 device="cpu"
 SOS_token = 0
 EOS_token = 1
-ENCODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\encoder.pth'
-DECODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\decoder.pth'
-TABLE_PREDICTOR_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\table_pred.pth'
+ENCODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\encoder (2).pth'
+DECODER_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\decoder (2).pth'
+TABLE_PREDICTOR_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\models\spider\table_pred (1).pth'
 LANG_FILE_PATH = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\train_spider.txt'
 TABLE_PROPS_FILE = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\table_props.json'
 SQL_VOCAB_FILE = r'C:\Users\admin\Desktop\Sent2LogicalForm\data\sql_vocab.txt'
@@ -66,29 +66,36 @@ def get_yale_output():
     print(refined_query)
     columns = Database().get_columns(table)
     print(columns)
-    final_query = ColumnsRanker(input_lang_sql,sql_output_lang).get_final_query(sentence,refined_query,columns,len(columns))
+    final_query = Ranker(columns,'<col>').get_final_query(sentence,refined_query,len(columns))
+    values = get_values(sentence)
+    final_query = Ranker(values,'value').get_final_query(sentence,final_query,len(values))
     print(final_query)
-    
+    final_query = re.sub('<col>+','*',final_query)
     return {
-        "output" : final_query,
+        "output" : final_query + ';',
         "table" : table
     }
 
-@app.route("/tranx", methods=['GET', 'POST'])
-def get_tranx_output():
-    return {
-        "output" : "Model under construction"
-    }
+
+from db import columns
 
 @app.route("/execute",methods=['POST'])
 def execute_query():
     query = request.json['query']
     table =  request.json['table']
-    print(table_props['table_names'][table])
-    if table_props['table_names'][table] not in tables :
+    count = re.search(r'insert|update|delete',query)
+    if count!=None:
+        return {
+            "result" : "Only read queries allowed"
+        }
+    if table not in list(columns.keys()) :
         return {
            "result" : "Table not present in db"
         }
+    header,rows = Database().execute(query)
     return {
-        "result" : Database().execute(query)
+        "result" : {
+            'header' : header,
+            'body' : rows
+        }
     }

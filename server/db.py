@@ -33,7 +33,8 @@ class Database:
         cur = self.mydb.cursor()
         cur.execute(query)
         rows = cur.fetchall()
-        return rows
+        field_names = [i[0] for i in cur.description]
+        return (field_names,rows)
     
     def get_columns(self,table)->list:
         return columns[table] if table in columns else []

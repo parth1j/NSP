@@ -1,0 +1,453 @@
+2022/05/19 10:46:30 [emerg] 10248#9480: "upstream" directive is not allowed here in C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/conf/nginx.conf:16
+2022/05/19 10:50:16 [emerg] 9496#4768: "upstream" directive is not allowed here in C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/conf/nginx.conf:16
+2022/05/19 10:50:45 [emerg] 13984#11496: "upstream" directive is not allowed here in C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/conf/nginx.conf:16
+2022/05/19 10:52:08 [warn] 8124#12524: "user" is not supported, ignored in C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/conf/nginx.conf:2
+2022/05/19 10:52:08 [emerg] 8124#12524: "upstream" directive is not allowed here in C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/conf/nginx.conf:17
+2022/05/19 10:56:40 [emerg] 3976#11164: unexpected end of file, expecting "}" in C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/conf/nginx.conf:86
+2022/05/19 10:57:11 [notice] 6540#14984: using the "select" event method
+2022/05/19 10:57:11 [notice] 6540#14984: using the "select" event method
+2022/05/19 10:57:11 [notice] 6540#14984: nginx/1.20.2
+2022/05/19 10:57:11 [notice] 6540#14984: nginx/1.20.2
+2022/05/19 10:57:11 [info] 6540#14984: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 10:57:11 [notice] 6540#14984: start worker processes
+2022/05/19 10:57:11 [notice] 6540#14984: start worker processes
+2022/05/19 10:57:11 [notice] 6540#14984: start worker process 7172
+2022/05/19 10:57:11 [notice] 6540#14984: start worker process 7172
+2022/05/19 10:57:11 [notice] 7172#11752: nginx/1.20.2
+2022/05/19 10:57:11 [notice] 7172#11752: nginx/1.20.2
+2022/05/19 10:57:11 [info] 7172#11752: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 10:57:11 [notice] 7172#11752: create thread 3352
+2022/05/19 10:57:11 [notice] 7172#11752: create thread 3352
+2022/05/19 10:57:11 [notice] 7172#11752: create thread 8840
+2022/05/19 10:57:11 [notice] 7172#11752: create thread 8840
+2022/05/19 10:57:11 [notice] 7172#11752: create thread 2584
+2022/05/19 10:57:11 [notice] 7172#11752: create thread 2584
+2022/05/19 11:22:46 [notice] 13416#9236: signal process started
+2022/05/19 11:22:46 [notice] 6540#14984: shutting down
+2022/05/19 11:22:46 [notice] 6540#14984: shutting down
+2022/05/19 11:22:46 [notice] 7172#11752: gracefully shutting down
+2022/05/19 11:22:46 [notice] 7172#11752: gracefully shutting down
+2022/05/19 11:22:46 [notice] 7172#8840: exiting
+2022/05/19 11:22:46 [notice] 7172#8840: exiting
+2022/05/19 11:22:46 [notice] 7172#3352: exiting
+2022/05/19 11:22:46 [notice] 7172#3352: exiting
+2022/05/19 11:22:46 [notice] 7172#11752: exit
+2022/05/19 11:22:46 [notice] 7172#11752: exit
+2022/05/19 11:22:46 [notice] 6540#14984: worker process 7172 exited with code 0
+2022/05/19 11:22:46 [notice] 6540#14984: worker process 7172 exited with code 0
+2022/05/19 11:22:46 [notice] 6540#14984: exit
+2022/05/19 11:22:46 [notice] 6540#14984: exit
+2022/05/19 11:22:52 [notice] 13580#5440: using the "select" event method
+2022/05/19 11:22:52 [notice] 13580#5440: using the "select" event method
+2022/05/19 11:22:52 [notice] 13580#5440: nginx/1.20.2
+2022/05/19 11:22:52 [notice] 13580#5440: nginx/1.20.2
+2022/05/19 11:22:52 [info] 13580#5440: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 11:22:52 [notice] 13580#5440: start worker processes
+2022/05/19 11:22:52 [notice] 13580#5440: start worker processes
+2022/05/19 11:22:52 [notice] 13580#5440: start worker process 8892
+2022/05/19 11:22:52 [notice] 13580#5440: start worker process 8892
+2022/05/19 11:22:52 [notice] 8892#4912: nginx/1.20.2
+2022/05/19 11:22:52 [notice] 8892#4912: nginx/1.20.2
+2022/05/19 11:22:52 [info] 8892#4912: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 11:22:52 [notice] 8892#4912: create thread 5000
+2022/05/19 11:22:52 [notice] 8892#4912: create thread 5000
+2022/05/19 11:22:52 [notice] 8892#4912: create thread 15160
+2022/05/19 11:22:52 [notice] 8892#4912: create thread 15160
+2022/05/19 11:22:52 [notice] 8892#4912: create thread 4468
+2022/05/19 11:22:52 [notice] 8892#4912: create thread 4468
+2022/05/19 11:31:23 [notice] 7372#7604: using the "select" event method
+2022/05/19 11:31:23 [notice] 7372#7604: using the "select" event method
+2022/05/19 11:31:23 [notice] 7372#7604: nginx/1.20.2
+2022/05/19 11:31:23 [notice] 7372#7604: nginx/1.20.2
+2022/05/19 11:31:23 [info] 7372#7604: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 11:31:23 [notice] 7372#7604: start worker processes
+2022/05/19 11:31:23 [notice] 7372#7604: start worker processes
+2022/05/19 11:31:23 [notice] 7372#7604: start worker process 14648
+2022/05/19 11:31:23 [notice] 7372#7604: start worker process 14648
+2022/05/19 11:31:23 [notice] 14648#808: nginx/1.20.2
+2022/05/19 11:31:23 [notice] 14648#808: nginx/1.20.2
+2022/05/19 11:31:23 [info] 14648#808: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 11:31:23 [notice] 14648#808: create thread 2800
+2022/05/19 11:31:23 [notice] 14648#808: create thread 2800
+2022/05/19 11:31:23 [notice] 14648#808: create thread 6124
+2022/05/19 11:31:23 [notice] 14648#808: create thread 6124
+2022/05/19 11:31:23 [notice] 14648#808: create thread 2644
+2022/05/19 11:31:23 [notice] 14648#808: create thread 2644
+2022/05/19 11:58:36 [notice] 3492#5108: using the "select" event method
+2022/05/19 11:58:36 [notice] 3492#5108: using the "select" event method
+2022/05/19 11:58:36 [notice] 3492#5108: nginx/1.20.2
+2022/05/19 11:58:36 [notice] 3492#5108: nginx/1.20.2
+2022/05/19 11:58:36 [info] 3492#5108: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 11:58:36 [notice] 3492#5108: start worker processes
+2022/05/19 11:58:36 [notice] 3492#5108: start worker processes
+2022/05/19 11:58:36 [notice] 3492#5108: start worker process 11440
+2022/05/19 11:58:36 [notice] 3492#5108: start worker process 11440
+2022/05/19 11:58:36 [notice] 11440#3552: nginx/1.20.2
+2022/05/19 11:58:36 [notice] 11440#3552: nginx/1.20.2
+2022/05/19 11:58:36 [info] 11440#3552: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 11:58:36 [notice] 11440#3552: create thread 10044
+2022/05/19 11:58:36 [notice] 11440#3552: create thread 10044
+2022/05/19 11:58:36 [notice] 11440#3552: create thread 11348
+2022/05/19 11:58:36 [notice] 11440#3552: create thread 11348
+2022/05/19 11:58:36 [notice] 11440#3552: create thread 10244
+2022/05/19 11:58:36 [notice] 11440#3552: create thread 10244
+2022/05/19 12:00:52 [info] 8892#5000: *10 client 127.0.0.1 closed keepalive connection
+2022/05/19 12:58:37 [notice] 4248#8568: using the "select" event method
+2022/05/19 12:58:37 [notice] 4248#8568: using the "select" event method
+2022/05/19 12:58:37 [notice] 4248#8568: nginx/1.20.2
+2022/05/19 12:58:37 [notice] 4248#8568: nginx/1.20.2
+2022/05/19 12:58:37 [info] 4248#8568: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 12:58:37 [notice] 4248#8568: start worker processes
+2022/05/19 12:58:37 [notice] 4248#8568: start worker processes
+2022/05/19 12:58:37 [notice] 4248#8568: start worker process 6356
+2022/05/19 12:58:37 [notice] 4248#8568: start worker process 6356
+2022/05/19 12:58:37 [notice] 6356#13412: nginx/1.20.2
+2022/05/19 12:58:37 [notice] 6356#13412: nginx/1.20.2
+2022/05/19 12:58:37 [info] 6356#13412: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 12:58:37 [notice] 6356#13412: create thread 8108
+2022/05/19 12:58:37 [notice] 6356#13412: create thread 8108
+2022/05/19 12:58:37 [notice] 6356#13412: create thread 7084
+2022/05/19 12:58:37 [notice] 6356#13412: create thread 7084
+2022/05/19 12:58:37 [notice] 6356#13412: create thread 11364
+2022/05/19 12:58:37 [notice] 6356#13412: create thread 11364
+2022/05/19 12:59:55 [info] 8892#5000: *15 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 127.0.0.1, server: 0.0.0.0:80
+2022/05/19 13:09:20 [notice] 3028#8868: using the "select" event method
+2022/05/19 13:09:20 [notice] 3028#8868: using the "select" event method
+2022/05/19 13:09:20 [notice] 3028#8868: nginx/1.20.2
+2022/05/19 13:09:20 [notice] 3028#8868: nginx/1.20.2
+2022/05/19 13:09:20 [info] 3028#8868: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:09:20 [notice] 3028#8868: start worker processes
+2022/05/19 13:09:20 [notice] 3028#8868: start worker processes
+2022/05/19 13:09:20 [notice] 3028#8868: start worker process 9320
+2022/05/19 13:09:20 [notice] 3028#8868: start worker process 9320
+2022/05/19 13:09:20 [notice] 9320#14444: nginx/1.20.2
+2022/05/19 13:09:20 [notice] 9320#14444: nginx/1.20.2
+2022/05/19 13:09:20 [info] 9320#14444: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:09:20 [notice] 9320#14444: create thread 5144
+2022/05/19 13:09:20 [notice] 9320#14444: create thread 5144
+2022/05/19 13:09:20 [notice] 9320#14444: create thread 11568
+2022/05/19 13:09:20 [notice] 9320#14444: create thread 11568
+2022/05/19 13:09:20 [notice] 9320#14444: create thread 10596
+2022/05/19 13:09:20 [notice] 9320#14444: create thread 10596
+2022/05/19 13:10:31 [info] 8892#5000: *19 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 127.0.0.1, server: 0.0.0.0:80
+2022/05/19 13:49:31 [notice] 13988#8848: signal process started
+2022/05/19 13:49:31 [notice] 3028#8868: reconfiguring
+2022/05/19 13:49:31 [notice] 3028#8868: reconfiguring
+2022/05/19 13:49:31 [alert] 3028#8868: MapViewOfFileEx(65536, 2EFE0000) of file mapping "upstream-flaskServer" failed (487: Attempt to access invalid address)
+2022/05/19 13:49:31 [alert] 3028#8868: MapViewOfFileEx(65536, 2EFE0000) of file mapping "upstream-flaskServer" failed (487: Attempt to access invalid address)
+2022/05/19 13:49:31 [alert] 3028#8868: MapViewOfFileEx(65536, 2EFE0000) of file mapping "upstream-flaskServer" failed (487: Attempt to access invalid address)
+2022/05/19 13:49:37 [notice] 9380#14576: using the "select" event method
+2022/05/19 13:49:37 [notice] 9380#14576: using the "select" event method
+2022/05/19 13:49:37 [notice] 9380#14576: nginx/1.20.2
+2022/05/19 13:49:37 [notice] 9380#14576: nginx/1.20.2
+2022/05/19 13:49:37 [info] 9380#14576: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:49:37 [notice] 9380#14576: start worker processes
+2022/05/19 13:49:37 [notice] 9380#14576: start worker processes
+2022/05/19 13:49:37 [notice] 9380#14576: start worker process 2392
+2022/05/19 13:49:37 [notice] 9380#14576: start worker process 2392
+2022/05/19 13:49:37 [notice] 2392#14328: nginx/1.20.2
+2022/05/19 13:49:37 [notice] 2392#14328: nginx/1.20.2
+2022/05/19 13:49:37 [info] 2392#14328: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:49:37 [notice] 2392#14328: create thread 14460
+2022/05/19 13:49:37 [notice] 2392#14328: create thread 14460
+2022/05/19 13:49:37 [notice] 2392#14328: create thread 14300
+2022/05/19 13:49:37 [notice] 2392#14328: create thread 14300
+2022/05/19 13:49:37 [notice] 2392#14328: create thread 9160
+2022/05/19 13:49:37 [notice] 2392#14328: create thread 9160
+2022/05/19 13:50:47 [info] 8892#5000: *23 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 127.0.0.1, server: 0.0.0.0:80
+2022/05/19 13:52:07 [notice] 7372#7604: worker process 14648 exited with code 1
+2022/05/19 13:52:07 [notice] 7372#7604: worker process 14648 exited with code 1
+2022/05/19 13:52:07 [notice] 7372#7604: start worker process 8232
+2022/05/19 13:52:07 [notice] 7372#7604: start worker process 8232
+2022/05/19 13:52:07 [notice] 8232#13252: nginx/1.20.2
+2022/05/19 13:52:07 [notice] 8232#13252: nginx/1.20.2
+2022/05/19 13:52:07 [info] 8232#13252: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:52:07 [notice] 8232#13252: create thread 9016
+2022/05/19 13:52:07 [notice] 8232#13252: create thread 9016
+2022/05/19 13:52:07 [notice] 8232#13252: create thread 8656
+2022/05/19 13:52:07 [notice] 8232#13252: create thread 8656
+2022/05/19 13:52:07 [notice] 8232#13252: create thread 11192
+2022/05/19 13:52:07 [notice] 8232#13252: create thread 11192
+2022/05/19 13:52:12 [notice] 3492#5108: worker process 11440 exited with code 1
+2022/05/19 13:52:12 [notice] 3492#5108: worker process 11440 exited with code 1
+2022/05/19 13:52:12 [notice] 3492#5108: start worker process 9532
+2022/05/19 13:52:12 [notice] 3492#5108: start worker process 9532
+2022/05/19 13:52:12 [notice] 9532#3804: nginx/1.20.2
+2022/05/19 13:52:12 [notice] 9532#3804: nginx/1.20.2
+2022/05/19 13:52:12 [info] 9532#3804: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:52:12 [notice] 9532#3804: create thread 10944
+2022/05/19 13:52:12 [notice] 9532#3804: create thread 10944
+2022/05/19 13:52:12 [notice] 9532#3804: create thread 11428
+2022/05/19 13:52:12 [notice] 9532#3804: create thread 11428
+2022/05/19 13:52:12 [notice] 9532#3804: create thread 12108
+2022/05/19 13:52:12 [notice] 9532#3804: create thread 12108
+2022/05/19 13:52:34 [notice] 9380#14576: worker process 2392 exited with code 1
+2022/05/19 13:52:34 [notice] 9380#14576: worker process 2392 exited with code 1
+2022/05/19 13:52:34 [notice] 9380#14576: start worker process 7420
+2022/05/19 13:52:34 [notice] 9380#14576: start worker process 7420
+2022/05/19 13:52:34 [notice] 7420#14516: nginx/1.20.2
+2022/05/19 13:52:34 [notice] 7420#14516: nginx/1.20.2
+2022/05/19 13:52:34 [info] 7420#14516: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:52:34 [notice] 7420#14516: create thread 4528
+2022/05/19 13:52:34 [notice] 7420#14516: create thread 4528
+2022/05/19 13:52:34 [notice] 7420#14516: create thread 11740
+2022/05/19 13:52:34 [notice] 7420#14516: create thread 11740
+2022/05/19 13:52:34 [notice] 7420#14516: create thread 8496
+2022/05/19 13:52:34 [notice] 7420#14516: create thread 8496
+2022/05/19 13:52:38 [notice] 9380#14576: worker process 7420 exited with code 1
+2022/05/19 13:52:38 [notice] 9380#14576: worker process 7420 exited with code 1
+2022/05/19 13:52:38 [notice] 9380#14576: start worker process 11880
+2022/05/19 13:52:38 [notice] 9380#14576: start worker process 11880
+2022/05/19 13:52:38 [notice] 11880#12484: nginx/1.20.2
+2022/05/19 13:52:38 [notice] 11880#12484: nginx/1.20.2
+2022/05/19 13:52:38 [info] 11880#12484: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:52:38 [notice] 11880#12484: create thread 14248
+2022/05/19 13:52:38 [notice] 11880#12484: create thread 14248
+2022/05/19 13:52:38 [notice] 11880#12484: create thread 3004
+2022/05/19 13:52:38 [notice] 11880#12484: create thread 3004
+2022/05/19 13:52:38 [notice] 11880#12484: create thread 12192
+2022/05/19 13:52:38 [notice] 11880#12484: create thread 12192
+2022/05/19 13:52:44 [notice] 9380#14576: worker process 11880 exited with code 1
+2022/05/19 13:52:44 [notice] 9380#14576: worker process 11880 exited with code 1
+2022/05/19 13:52:44 [notice] 9380#14576: start worker process 9352
+2022/05/19 13:52:44 [notice] 9380#14576: start worker process 9352
+2022/05/19 13:52:44 [notice] 9352#6188: nginx/1.20.2
+2022/05/19 13:52:44 [notice] 9352#6188: nginx/1.20.2
+2022/05/19 13:52:44 [info] 9352#6188: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:52:44 [notice] 9352#6188: create thread 10764
+2022/05/19 13:52:44 [notice] 9352#6188: create thread 10764
+2022/05/19 13:52:44 [notice] 9352#6188: create thread 9396
+2022/05/19 13:52:44 [notice] 9352#6188: create thread 9396
+2022/05/19 13:52:44 [notice] 9352#6188: create thread 240
+2022/05/19 13:52:44 [notice] 9352#6188: create thread 240
+2022/05/19 13:52:48 [notice] 9380#14576: worker process 9352 exited with code 1
+2022/05/19 13:52:48 [notice] 9380#14576: worker process 9352 exited with code 1
+2022/05/19 13:52:48 [notice] 9380#14576: start worker process 4524
+2022/05/19 13:52:48 [notice] 9380#14576: start worker process 4524
+2022/05/19 13:52:48 [notice] 4524#3116: nginx/1.20.2
+2022/05/19 13:52:48 [notice] 4524#3116: nginx/1.20.2
+2022/05/19 13:52:48 [info] 4524#3116: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:52:48 [notice] 4524#3116: create thread 928
+2022/05/19 13:52:48 [notice] 4524#3116: create thread 928
+2022/05/19 13:52:48 [notice] 4524#3116: create thread 15100
+2022/05/19 13:52:48 [notice] 4524#3116: create thread 15100
+2022/05/19 13:52:48 [notice] 4524#3116: create thread 13868
+2022/05/19 13:52:48 [notice] 4524#3116: create thread 13868
+2022/05/19 13:53:32 [notice] 4248#8568: worker process 6356 exited with code 1
+2022/05/19 13:53:32 [notice] 4248#8568: worker process 6356 exited with code 1
+2022/05/19 13:53:32 [notice] 4248#8568: start worker process 12268
+2022/05/19 13:53:32 [notice] 4248#8568: start worker process 12268
+2022/05/19 13:53:32 [notice] 12268#10100: nginx/1.20.2
+2022/05/19 13:53:32 [notice] 12268#10100: nginx/1.20.2
+2022/05/19 13:53:32 [info] 12268#10100: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:53:32 [notice] 12268#10100: create thread 3220
+2022/05/19 13:53:32 [notice] 12268#10100: create thread 3220
+2022/05/19 13:53:32 [notice] 12268#10100: create thread 13644
+2022/05/19 13:53:32 [notice] 12268#10100: create thread 13644
+2022/05/19 13:53:32 [notice] 12268#10100: create thread 14300
+2022/05/19 13:53:32 [notice] 12268#10100: create thread 14300
+2022/05/19 13:54:02 [notice] 3028#8868: worker process 9320 exited with code 1
+2022/05/19 13:54:02 [notice] 3028#8868: worker process 9320 exited with code 1
+2022/05/19 13:54:02 [notice] 3028#8868: start worker process 5764
+2022/05/19 13:54:02 [notice] 3028#8868: start worker process 5764
+2022/05/19 13:54:02 [notice] 5764#6916: nginx/1.20.2
+2022/05/19 13:54:02 [notice] 5764#6916: nginx/1.20.2
+2022/05/19 13:54:02 [info] 5764#6916: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:54:02 [notice] 5764#6916: create thread 6872
+2022/05/19 13:54:02 [notice] 5764#6916: create thread 6872
+2022/05/19 13:54:02 [notice] 5764#6916: create thread 2932
+2022/05/19 13:54:02 [notice] 5764#6916: create thread 2932
+2022/05/19 13:54:02 [notice] 5764#6916: create thread 13624
+2022/05/19 13:54:02 [notice] 5764#6916: create thread 13624
+2022/05/19 13:54:20 [notice] 3028#8868: worker process 5764 exited with code 1
+2022/05/19 13:54:20 [notice] 3028#8868: worker process 5764 exited with code 1
+2022/05/19 13:54:20 [notice] 3028#8868: start worker process 1428
+2022/05/19 13:54:20 [notice] 3028#8868: start worker process 1428
+2022/05/19 13:54:20 [notice] 1428#3820: nginx/1.20.2
+2022/05/19 13:54:20 [notice] 1428#3820: nginx/1.20.2
+2022/05/19 13:54:20 [info] 1428#3820: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:54:20 [notice] 1428#3820: create thread 9520
+2022/05/19 13:54:20 [notice] 1428#3820: create thread 9520
+2022/05/19 13:54:20 [notice] 1428#3820: create thread 6068
+2022/05/19 13:54:20 [notice] 1428#3820: create thread 6068
+2022/05/19 13:54:20 [notice] 1428#3820: create thread 6504
+2022/05/19 13:54:20 [notice] 1428#3820: create thread 6504
+2022/05/19 13:54:26 [notice] 3028#8868: worker process 1428 exited with code 1
+2022/05/19 13:54:26 [notice] 3028#8868: worker process 1428 exited with code 1
+2022/05/19 13:54:26 [notice] 3028#8868: start worker process 6408
+2022/05/19 13:54:26 [notice] 3028#8868: start worker process 6408
+2022/05/19 13:54:26 [notice] 6408#10812: nginx/1.20.2
+2022/05/19 13:54:26 [notice] 6408#10812: nginx/1.20.2
+2022/05/19 13:54:26 [info] 6408#10812: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:54:26 [notice] 6408#10812: create thread 15320
+2022/05/19 13:54:26 [notice] 6408#10812: create thread 15320
+2022/05/19 13:54:26 [notice] 6408#10812: create thread 15232
+2022/05/19 13:54:26 [notice] 6408#10812: create thread 15232
+2022/05/19 13:54:26 [notice] 6408#10812: create thread 2844
+2022/05/19 13:54:26 [notice] 6408#10812: create thread 2844
+2022/05/19 13:54:32 [notice] 3028#8868: worker process 6408 exited with code 1
+2022/05/19 13:54:32 [notice] 3028#8868: worker process 6408 exited with code 1
+2022/05/19 13:54:32 [notice] 3028#8868: start worker process 11184
+2022/05/19 13:54:32 [notice] 3028#8868: start worker process 11184
+2022/05/19 13:54:33 [notice] 11184#9768: nginx/1.20.2
+2022/05/19 13:54:33 [notice] 11184#9768: nginx/1.20.2
+2022/05/19 13:54:33 [info] 11184#9768: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 13:54:33 [notice] 11184#9768: create thread 9332
+2022/05/19 13:54:33 [notice] 11184#9768: create thread 9332
+2022/05/19 13:54:33 [notice] 11184#9768: create thread 3392
+2022/05/19 13:54:33 [notice] 11184#9768: create thread 3392
+2022/05/19 13:54:33 [notice] 11184#9768: create thread 812
+2022/05/19 13:54:33 [notice] 11184#9768: create thread 812
+2022/05/19 14:47:54 [notice] 15204#6152: signal process started
+2022/05/19 14:47:54 [error] 15204#6152: OpenEvent("Global\ngx_reload_9380") failed (2: The system cannot find the file specified)
+2022/05/19 14:48:02 [notice] 6552#11212: using the "select" event method
+2022/05/19 14:48:02 [notice] 6552#11212: using the "select" event method
+2022/05/19 14:48:02 [notice] 6552#11212: nginx/1.20.2
+2022/05/19 14:48:02 [notice] 6552#11212: nginx/1.20.2
+2022/05/19 14:48:02 [info] 6552#11212: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 14:48:02 [notice] 6552#11212: start worker processes
+2022/05/19 14:48:02 [notice] 6552#11212: start worker processes
+2022/05/19 14:48:02 [notice] 6552#11212: start worker process 14200
+2022/05/19 14:48:02 [notice] 6552#11212: start worker process 14200
+2022/05/19 14:48:02 [notice] 14200#3148: nginx/1.20.2
+2022/05/19 14:48:02 [notice] 14200#3148: nginx/1.20.2
+2022/05/19 14:48:02 [info] 14200#3148: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 14:48:02 [notice] 14200#3148: create thread 7920
+2022/05/19 14:48:02 [notice] 14200#3148: create thread 7920
+2022/05/19 14:48:02 [notice] 14200#3148: create thread 8720
+2022/05/19 14:48:02 [notice] 14200#3148: create thread 8720
+2022/05/19 14:48:02 [notice] 14200#3148: create thread 11084
+2022/05/19 14:48:02 [notice] 14200#3148: create thread 11084
+2022/05/19 14:49:37 [info] 14200#7920: *3 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 127.0.0.1, server: 0.0.0.0:80
+2022/05/19 14:51:25 [info] 14200#7920: *6 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 127.0.0.1, server: 0.0.0.0:80
+2022/05/19 14:52:21 [notice] 6112#14596: signal process started
+2022/05/19 14:52:21 [notice] 6552#11212: shutting down
+2022/05/19 14:52:21 [notice] 6552#11212: shutting down
+2022/05/19 14:52:21 [notice] 14200#3148: gracefully shutting down
+2022/05/19 14:52:21 [notice] 14200#3148: gracefully shutting down
+2022/05/19 14:52:21 [notice] 14200#8720: exiting
+2022/05/19 14:52:21 [notice] 14200#8720: exiting
+2022/05/19 14:52:22 [notice] 14200#7920: exiting
+2022/05/19 14:52:22 [notice] 14200#7920: exiting
+2022/05/19 14:52:22 [notice] 14200#3148: exit
+2022/05/19 14:52:22 [notice] 14200#3148: exit
+2022/05/19 14:52:22 [notice] 6552#11212: worker process 14200 exited with code 0
+2022/05/19 14:52:22 [notice] 6552#11212: worker process 14200 exited with code 0
+2022/05/19 14:52:22 [notice] 6552#11212: exit
+2022/05/19 14:52:22 [notice] 6552#11212: exit
+2022/05/19 14:52:54 [notice] 5112#14300: signal process started
+2022/05/19 14:52:54 [error] 5112#14300: CreateFile() "C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2022/05/19 14:55:11 [notice] 5308#13544: signal process started
+2022/05/19 14:55:11 [error] 5308#13544: CreateFile() "C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2022/05/19 14:56:30 [notice] 12256#9940: signal process started
+2022/05/19 14:56:30 [error] 12256#9940: invalid PID number "" in "C:\Users\admin\Desktop\Sent2LogicalForm\nginx-1.20.2/logs/nginx.pid"
+2022/05/19 14:59:45 [notice] 1420#6252: using the "select" event method
+2022/05/19 14:59:45 [notice] 1420#6252: using the "select" event method
+2022/05/19 14:59:45 [notice] 1420#6252: nginx/1.20.2
+2022/05/19 14:59:45 [notice] 1420#6252: nginx/1.20.2
+2022/05/19 14:59:45 [info] 1420#6252: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 14:59:45 [notice] 1420#6252: start worker processes
+2022/05/19 14:59:45 [notice] 1420#6252: start worker processes
+2022/05/19 14:59:45 [notice] 1420#6252: start worker process 14360
+2022/05/19 14:59:45 [notice] 1420#6252: start worker process 14360
+2022/05/19 14:59:45 [notice] 14360#11568: nginx/1.20.2
+2022/05/19 14:59:45 [notice] 14360#11568: nginx/1.20.2
+2022/05/19 14:59:45 [info] 14360#11568: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 14:59:45 [notice] 14360#11568: create thread 9148
+2022/05/19 14:59:45 [notice] 14360#11568: create thread 9148
+2022/05/19 14:59:45 [notice] 14360#11568: create thread 15228
+2022/05/19 14:59:45 [notice] 14360#11568: create thread 15228
+2022/05/19 14:59:45 [notice] 14360#11568: create thread 5452
+2022/05/19 14:59:45 [notice] 14360#11568: create thread 5452
+2022/05/19 14:59:56 [notice] 9692#3784: using the "select" event method
+2022/05/19 14:59:56 [notice] 9692#3784: using the "select" event method
+2022/05/19 14:59:56 [notice] 9692#3784: nginx/1.20.2
+2022/05/19 14:59:56 [notice] 9692#3784: nginx/1.20.2
+2022/05/19 14:59:56 [info] 9692#3784: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 14:59:56 [notice] 9692#3784: start worker processes
+2022/05/19 14:59:56 [notice] 9692#3784: start worker processes
+2022/05/19 14:59:56 [notice] 9692#3784: start worker process 11684
+2022/05/19 14:59:56 [notice] 9692#3784: start worker process 11684
+2022/05/19 14:59:56 [notice] 11684#4244: nginx/1.20.2
+2022/05/19 14:59:56 [notice] 11684#4244: nginx/1.20.2
+2022/05/19 14:59:56 [info] 11684#4244: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 14:59:56 [notice] 11684#4244: create thread 8996
+2022/05/19 14:59:56 [notice] 11684#4244: create thread 8996
+2022/05/19 14:59:56 [notice] 11684#4244: create thread 3660
+2022/05/19 14:59:56 [notice] 11684#4244: create thread 3660
+2022/05/19 14:59:56 [notice] 11684#4244: create thread 600
+2022/05/19 14:59:56 [notice] 11684#4244: create thread 600
+2022/05/19 15:01:04 [info] 14360#9148: *3 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 127.0.0.1, server: 0.0.0.0:80
+2022/05/19 15:01:24 [notice] 14288#7360: signal process started
+2022/05/19 15:01:24 [notice] 9692#3784: shutting down
+2022/05/19 15:01:24 [notice] 9692#3784: shutting down
+2022/05/19 15:01:24 [notice] 11684#4244: gracefully shutting down
+2022/05/19 15:01:24 [notice] 11684#4244: gracefully shutting down
+2022/05/19 15:01:24 [notice] 11684#3660: exiting
+2022/05/19 15:01:24 [notice] 11684#3660: exiting
+2022/05/19 15:01:24 [notice] 11684#8996: exiting
+2022/05/19 15:01:24 [notice] 11684#8996: exiting
+2022/05/19 15:01:24 [notice] 11684#4244: exit
+2022/05/19 15:01:24 [notice] 11684#4244: exit
+2022/05/19 15:01:24 [notice] 9692#3784: worker process 11684 exited with code 0
+2022/05/19 15:01:24 [notice] 9692#3784: worker process 11684 exited with code 0
+2022/05/19 15:01:24 [notice] 9692#3784: exit
+2022/05/19 15:01:24 [notice] 9692#3784: exit
+2022/05/19 15:01:40 [notice] 1676#9680: using the "select" event method
+2022/05/19 15:01:40 [notice] 1676#9680: using the "select" event method
+2022/05/19 15:01:40 [notice] 1676#9680: nginx/1.20.2
+2022/05/19 15:01:40 [notice] 1676#9680: nginx/1.20.2
+2022/05/19 15:01:40 [info] 1676#9680: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 15:01:40 [notice] 1676#9680: start worker processes
+2022/05/19 15:01:40 [notice] 1676#9680: start worker processes
+2022/05/19 15:01:40 [notice] 1676#9680: start worker process 3684
+2022/05/19 15:01:40 [notice] 1676#9680: start worker process 3684
+2022/05/19 15:01:40 [notice] 3684#10588: nginx/1.20.2
+2022/05/19 15:01:40 [notice] 3684#10588: nginx/1.20.2
+2022/05/19 15:01:40 [info] 3684#10588: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 15:01:40 [notice] 3684#10588: create thread 3396
+2022/05/19 15:01:40 [notice] 3684#10588: create thread 3396
+2022/05/19 15:01:40 [notice] 3684#10588: create thread 4136
+2022/05/19 15:01:40 [notice] 3684#10588: create thread 4136
+2022/05/19 15:01:40 [notice] 3684#10588: create thread 9272
+2022/05/19 15:01:40 [notice] 3684#10588: create thread 9272
+2022/05/19 15:01:50 [notice] 3204#12036: signal process started
+2022/05/19 15:01:50 [notice] 1676#9680: reconfiguring
+2022/05/19 15:01:50 [notice] 1676#9680: reconfiguring
+2022/05/19 15:01:50 [alert] 1676#9680: MapViewOfFileEx(65536, 2EFE0000) of file mapping "upstream-flaskServer" failed (487: Attempt to access invalid address)
+2022/05/19 15:01:50 [alert] 1676#9680: MapViewOfFileEx(65536, 2EFE0000) of file mapping "upstream-flaskServer" failed (487: Attempt to access invalid address)
+2022/05/19 15:01:50 [alert] 1676#9680: MapViewOfFileEx(65536, 2EFE0000) of file mapping "upstream-flaskServer" failed (487: Attempt to access invalid address)
+2022/05/19 15:01:59 [notice] 8384#13124: using the "select" event method
+2022/05/19 15:01:59 [notice] 8384#13124: using the "select" event method
+2022/05/19 15:01:59 [notice] 8384#13124: nginx/1.20.2
+2022/05/19 15:01:59 [notice] 8384#13124: nginx/1.20.2
+2022/05/19 15:01:59 [info] 8384#13124: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 15:01:59 [notice] 8384#13124: start worker processes
+2022/05/19 15:01:59 [notice] 8384#13124: start worker processes
+2022/05/19 15:01:59 [notice] 8384#13124: start worker process 11132
+2022/05/19 15:01:59 [notice] 8384#13124: start worker process 11132
+2022/05/19 15:01:59 [notice] 11132#1580: nginx/1.20.2
+2022/05/19 15:01:59 [notice] 11132#1580: nginx/1.20.2
+2022/05/19 15:01:59 [info] 11132#1580: OS: 260200 build:9200, "", suite:300, type:1
+2022/05/19 15:01:59 [notice] 11132#1580: create thread 11188
+2022/05/19 15:01:59 [notice] 11132#1580: create thread 11188
+2022/05/19 15:01:59 [notice] 11132#1580: create thread 4060
+2022/05/19 15:01:59 [notice] 11132#1580: create thread 4060
+2022/05/19 15:01:59 [notice] 11132#1580: create thread 12964
+2022/05/19 15:01:59 [notice] 11132#1580: create thread 12964
+2022/05/19 15:03:17 [info] 14360#9148: *6 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 127.0.0.1, server: 0.0.0.0:80
+2022/05/19 16:03:21 [notice] 2844#12044: signal process started
+2022/05/19 16:03:21 [notice] 8384#13124: shutting down
+2022/05/19 16:03:21 [notice] 8384#13124: shutting down
+2022/05/19 16:03:21 [notice] 11132#1580: gracefully shutting down
+2022/05/19 16:03:21 [notice] 11132#1580: gracefully shutting down
+2022/05/19 16:03:21 [notice] 11132#4060: exiting
+2022/05/19 16:03:21 [notice] 11132#4060: exiting
+2022/05/19 16:03:21 [notice] 11132#11188: exiting
+2022/05/19 16:03:21 [notice] 11132#11188: exiting
+2022/05/19 16:03:21 [notice] 11132#1580: exit
+2022/05/19 16:03:21 [notice] 11132#1580: exit
+2022/05/19 16:03:21 [notice] 8384#13124: worker process 11132 exited with code 0
+2022/05/19 16:03:21 [notice] 8384#13124: worker process 11132 exited with code 0
+2022/05/19 16:03:21 [notice] 8384#13124: exit
+2022/05/19 16:03:21 [notice] 8384#13124: exit

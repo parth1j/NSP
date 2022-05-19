@@ -11,7 +11,10 @@ const errorMessages = {
     WRONG_PASSWORD : 'Wrong password',
     USER_EXISTS : 'User already exists',
     UNAUTHORIZED : 'Access is unauthorized',
-    FAILED_FETCH_USER : 'Failed to get users'
+    FAILED_FETCH_QUERY : 'Failed to get queries',
+    FAILED_POST_QUERY : 'Failed to save query',
+    FAILED_PUT_QUERY : 'Failed to update query',
+    FAILED_DELETE_QUERY : 'Failed to delete query'
 }
 
 module.exports = {

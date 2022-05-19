@@ -5,15 +5,24 @@ const jwt = require("jsonwebtoken");
 const Users = require('../db').userModel;
 const bcrypt = require("bcrypt");
 const { endpoints,errorMessages } = require('../utils');
-const logger = new Singleton().getloggerInstance()
 
 const verifyToken = (req,res,next)=>{
   const header = req.headers['authorization'];
   if(typeof header!=='undefined') {
       const bearer = header.split(' ');
-      const token = bearer[0];
-      req.token = token;
-      next();
+      console.log(bearer)
+      const token = bearer[1];
+      if (!token) {
+        return res.status(403).send("A token is required for authentication");
+      }
+      try {
+        const decoded = jwt.verify(token, process.env.jwt_key);
+        req.user = decoded;
+      } catch (err) {
+        console.log(err)
+        return res.status(401).send("Invalid Token");
+      }
+      return next();
   } else {
      res.status(403).json(
        {
@@ -36,7 +45,7 @@ router.route(endpoints.BASE).get(
         }
       )
     }).catch(error=>{
-      logger.log(error)
+      console.log(error)
       res.status(500).json({
         error: true,
         message: errorMessages.FAILED_FETCH_USER
@@ -76,7 +85,7 @@ router.post(
       });
     })
     .catch(error=>{
-      logger.log(error)
+      console.log(error)
       res.status(500).json({
         error: true,
         message: errorMessages.FAILED_LOGIN
@@ -110,7 +119,7 @@ router.post(
             });
         })
         .catch(error=>{
-          logger.log(error)
+          console.log(error)
           res.status(500).json({
             error: true,
             message: errorMessages.FAILED_REGISTER
@@ -118,7 +127,7 @@ router.post(
         })
     })
     .catch(error=>{
-      logger.log(error)
+      console.log(error)
       res.status(500).json({
         error: true,
         message: errorMessages.FAILED_REGISTER

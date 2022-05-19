@@ -31,12 +31,5 @@ for sent in sentences:
   sim = cosine(query_vec, model.encode([sent])[0])
   print("Sentence = ", sent, "; similarity = ", sim)
 '''
-
-from db import Database
-
-
-tables = Database().get_tables()
-columns={}
-for table in tables:
-    columns[table] = Database().get_columns(table)
-print(columns)
+import re
+print(re.sub('<col>','column','select <col> <col><col> from <table>',count=1))
