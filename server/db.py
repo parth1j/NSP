@@ -24,7 +24,7 @@ class Database:
             host="localhost",
             user="root",
             database="spider",
-            passwd="Msdian-77",
+            passwd="fekboig",
             auth_plugin='mysql_native_password'
         )
 
